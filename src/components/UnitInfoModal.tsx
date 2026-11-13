@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { UnitOption, WarbandUnit, SelectedWargear, Weapon, WargearOption, UnitUpgrade, SelectedPsychicPower, SelectedGiftOfChaos } from '../types/index.js';
 import { lookupWeapon, lookupWargear } from '../data/wargearSlotValidation.js';
 import { lookupPsychicPower } from '../data/psychicDisciplines.js';
@@ -72,6 +73,7 @@ function isWeapon(item: Weapon | WargearOption): item is Weapon {
 // ── Component ────────────────────────────────────────────────────────────────
 
 export function UnitInfoModal({ unit, baseUnit, selectedWargear, selectedUpgrades, selectedPsychicPowers, selectedGiftsOfChaos, warbandUnit, onClose }: UnitInfoModalProps) {
+  const { t } = useTranslation();
   const isSelectedMode = selectedWargear !== undefined;
   const [infoItem, setInfoItem] = useState<{ item: Weapon | WargearOption; catType: 'weapon' | 'armor' | 'equipment' } | null>(null);
 
@@ -107,8 +109,8 @@ export function UnitInfoModal({ unit, baseUnit, selectedWargear, selectedUpgrade
 
   const costLabel =
     unit.costCurrency === 'glory'
-      ? `${unit.baseCost} Glory/model`
-      : `${unit.baseCost} Credits/model`;
+      ? `${unit.baseCost} ${t('builder.glory')}/model`
+      : `${unit.baseCost} ${t('builder.credits')}/model`;
 
   return (
     <div className="unit-info-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
@@ -119,9 +121,9 @@ export function UnitInfoModal({ unit, baseUnit, selectedWargear, selectedUpgrade
           <div>
             <h2 className="unit-info-title">{unit.name}</h2>
             <p className="unit-info-subtitle">
-              {unit.unitType === 'elite' ? 'Elite' : 'Troop'} · {costLabel}
+              {unit.unitType === 'elite' ? t('unitInfo.elite') : t('unitInfo.troop')} · {costLabel}
               {unit.minCount > 0 || unit.maxCount < 99
-                ? ` · ${unit.minCount}–${unit.maxCount === 99 ? '∞' : unit.maxCount} models`
+                ? ` · ${t('unitInfo.modelsRange', { min: unit.minCount, max: unit.maxCount === 99 ? '∞' : unit.maxCount })}`
                 : ''}
             </p>
             {unit.description && (
@@ -138,7 +140,7 @@ export function UnitInfoModal({ unit, baseUnit, selectedWargear, selectedUpgrade
           {subTypeAbility && (
             <section className="unit-info-section unit-subtype-section">
               <h3 className="unit-info-section-title unit-subtype-title">
-                Selected Option: {subTypeAbility.name}
+                {t('unitInfo.selectedOption', { name: subTypeAbility.name })}
               </h3>
               <p className="unit-subtype-rules">{subTypeAbility.description}</p>
             </section>
@@ -146,17 +148,17 @@ export function UnitInfoModal({ unit, baseUnit, selectedWargear, selectedUpgrade
 
           {/* ── Stats table ──────────────────────────────────────── */}
           <section className="unit-info-section">
-            <h3 className="unit-info-section-title">Profile</h3>
+            <h3 className="unit-info-section-title">{t('unitInfo.profile')}</h3>
             <div className="unit-info-table-wrap">
               <table className="unit-info-table">
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Movement</th>
-                    <th>Ranged</th>
-                    <th>Melee</th>
-                    <th>Armour</th>
-                    <th>Base</th>
+                    <th>{t('unitInfo.name')}</th>
+                    <th>{t('unitInfo.movement')}</th>
+                    <th>{t('unitInfo.ranged')}</th>
+                    <th>{t('unitInfo.melee')}</th>
+                    <th>{t('unitInfo.armour')}</th>
+                    <th>{t('unitInfo.base')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -212,18 +214,16 @@ export function UnitInfoModal({ unit, baseUnit, selectedWargear, selectedUpgrade
               <>
                 {defWeapons.length > 0 && (
                   <section className="unit-info-section unit-default-kit-section">
-                    <h3 className="unit-info-section-title">
-                      Default Battlekit
-                      <span className="unit-default-kit-badge">Included in cost</span>
+                    <h3 className="unit-info-section-title">{t('unitInfo.defaultBattlekit')}<span className="unit-default-kit-badge">{t('unitInfo.includedInCost')}</span>
                     </h3>
                     <div className="unit-info-table-wrap">
                       <table className="unit-info-table">
                         <thead>
                           <tr>
-                            <th>Weapon</th>
-                            <th>Type</th>
-                            <th>Range</th>
-                            <th>Rules</th>
+                            <th>{t('unitInfo.weapon')}</th>
+                            <th>{t('unitInfo.type')}</th>
+                            <th>{t('unitInfo.range')}</th>
+                            <th>{t('unitInfo.rules')}</th>
                             <th></th>
                           </tr>
                         </thead>
@@ -252,9 +252,7 @@ export function UnitInfoModal({ unit, baseUnit, selectedWargear, selectedUpgrade
                 {defGear.length > 0 && (
                   <section className="unit-info-section unit-default-kit-section">
                     {defWeapons.length === 0 && (
-                      <h3 className="unit-info-section-title">
-                        Default Battlekit
-                        <span className="unit-default-kit-badge">Included in cost</span>
+                      <h3 className="unit-info-section-title">{t('unitInfo.defaultBattlekit')}<span className="unit-default-kit-badge">{t('unitInfo.includedInCost')}</span>
                       </h3>
                     )}
                     <ul className="unit-info-abilities">
@@ -277,16 +275,16 @@ export function UnitInfoModal({ unit, baseUnit, selectedWargear, selectedUpgrade
           {/* ── Equipped Weapons (selected mode only) ────────────── */}
           {isSelectedMode && equippedWeapons.length > 0 && (
             <section className="unit-info-section">
-              <h3 className="unit-info-section-title">Weapons</h3>
+              <h3 className="unit-info-section-title">{t('unitInfo.weapons')}</h3>
               <div className="unit-info-table-wrap">
                 <table className="unit-info-table">
                   <thead>
                     <tr>
-                      <th>Weapon</th>
-                      <th>Type</th>
-                      <th>Range</th>
-                      <th>Rules</th>
-                      <th>Cost</th>
+                      <th>{t('unitInfo.weapon')}</th>
+                      <th>{t('unitInfo.type')}</th>
+                      <th>{t('unitInfo.range')}</th>
+                      <th>{t('unitInfo.rules')}</th>
+                      <th>{t('unitInfo.cost')}</th>
                       <th></th>
                     </tr>
                   </thead>
@@ -297,7 +295,7 @@ export function UnitInfoModal({ unit, baseUnit, selectedWargear, selectedUpgrade
                         <td><span className={`weapon-type-badge type-${w.type}`}>{weaponTypeLabel(w)}</span></td>
                         <td>{weaponRangeLabel(w)}</td>
                         <td className="keywords-cell"><KeywordList keywords={w.keywords} /></td>
-                        <td>{sw.cost * sw.quantity} {sw.costCurrency === 'glory' ? 'Glory' : 'Credits'}</td>
+                        <td>{sw.cost * sw.quantity} {sw.costCurrency === 'glory' ? t('builder.glory') : t('builder.credits')}</td>
                         <td><button className="btn-wg-eye" title={`View ${w.name} details`} onClick={() => setInfoItem({ item: w, catType: 'weapon' })}>👁</button></td>
                       </tr>
                     ))}
@@ -310,16 +308,16 @@ export function UnitInfoModal({ unit, baseUnit, selectedWargear, selectedUpgrade
           {/* ── Equipped Battlekit (selected mode only) ──────────── */}
           {isSelectedMode && equippedBattlekit.length > 0 && (
             <section className="unit-info-section">
-              <h3 className="unit-info-section-title">Battlekit</h3>
+              <h3 className="unit-info-section-title">{t('unitInfo.battlekit')}</h3>
               <div className="unit-info-table-wrap">
                 <table className="unit-info-table">
                   <thead>
                     <tr>
-                      <th>Name</th>
-                      <th>Type</th>
-                      <th>Slot</th>
-                      <th>Keywords</th>
-                      <th>Cost</th>
+                      <th>{t('unitInfo.name')}</th>
+                      <th>{t('unitInfo.type')}</th>
+                      <th>{t('unitInfo.slot')}</th>
+                      <th>{t('unitInfo.keywords')}</th>
+                      <th>{t('unitInfo.cost')}</th>
                       <th></th>
                     </tr>
                   </thead>
@@ -330,7 +328,7 @@ export function UnitInfoModal({ unit, baseUnit, selectedWargear, selectedUpgrade
                         <td>{g.type === 'armor' ? 'Armour' : 'Equipment'}</td>
                         <td>{g.slot ?? '—'}</td>
                         <td className="keywords-cell"><KeywordList keywords={g.keywords} /></td>
-                        <td>{sw.cost * sw.quantity} {sw.costCurrency === 'glory' ? 'Glory' : 'Credits'}</td>
+                        <td>{sw.cost * sw.quantity} {sw.costCurrency === 'glory' ? t('builder.glory') : t('builder.credits')}</td>
                         <td><button className="btn-wg-eye" title={`View ${g.name} details`} onClick={() => setInfoItem({ item: g, catType: g.type === 'armor' ? 'armor' : 'equipment' })}>👁</button></td>
                       </tr>
                     ))}
@@ -348,16 +346,16 @@ export function UnitInfoModal({ unit, baseUnit, selectedWargear, selectedUpgrade
             if (activeUpgs.length === 0) return null;
             return (
               <section className="unit-info-section unit-upgrade-section">
-                <h3 className="unit-info-section-title unit-upgrade-section-title">⬆ Applied Upgrade</h3>
+                <h3 className="unit-info-section-title unit-upgrade-section-title">{t('unitInfo.appliedUpgrade')}</h3>
                 {activeUpgs.map((upg: UnitUpgrade) => (
                   <div key={upg.id} className="unit-upgrade-card">
                     <div className="unit-upgrade-card-header">
                       <span className="unit-upgrade-card-name">{upg.name}</span>
-                      <span className="unit-upgrade-card-cost">+{upg.cost} Credits</span>
+                      <span className="unit-upgrade-card-cost">+{upg.cost} {t('builder.credits')}</span>
                     </div>
                     {upg.grantedKeywords && upg.grantedKeywords.length > 0 && (
                       <div className="unit-upgrade-keywords">
-                        <span className="unit-upgrade-kw-label">Grants:</span>
+                        <span className="unit-upgrade-kw-label">{t('unitInfo.grants')}</span>
                         {upg.grantedKeywords.map(kw => (
                           <KeywordChip key={kw} keyword={kw} className="unit-upgrade-kw-chip" />
                         ))}
@@ -376,13 +374,13 @@ export function UnitInfoModal({ unit, baseUnit, selectedWargear, selectedUpgrade
             if (psyGear.length === 0) return null;
             return (
               <section className="unit-info-section unit-psychic-section">
-                <h3 className="unit-info-section-title unit-psychic-section-title">✨ Innate Psychic Powers</h3>
+                <h3 className="unit-info-section-title unit-psychic-section-title">{t('unitInfo.innatePsychic')}</h3>
                 <div className="unit-psychic-list">
                   {psyGear.map(g => (
                     <div key={g.id} className="unit-psychic-card">
                       <div className="unit-psychic-card-header">
                         <span className="unit-psychic-card-name">{g.name}</span>
-                        <span className="unit-psychic-card-meta">Innate · Included in cost</span>
+                        <span className="unit-psychic-card-meta">{t('unitInfo.innateIncluded')}</span>
                       </div>
                       {g.description && <p className="unit-psychic-card-desc">{g.description}</p>}
                     </div>
@@ -395,7 +393,7 @@ export function UnitInfoModal({ unit, baseUnit, selectedWargear, selectedUpgrade
           {/* ── Psychic Powers (warband unit, selected mode) ──────────── */}
           {selectedPsychicPowers && selectedPsychicPowers.length > 0 && (
             <section className="unit-info-section unit-psychic-section">
-              <h3 className="unit-info-section-title unit-psychic-section-title">✨ Psychic Powers</h3>
+              <h3 className="unit-info-section-title unit-psychic-section-title">{t('unitInfo.psychicPowers')}</h3>
               <div className="unit-psychic-list">
                 {selectedPsychicPowers.map(sp => {
                   const full = lookupPsychicPower(sp.disciplineId, sp.id);
@@ -410,10 +408,10 @@ export function UnitInfoModal({ unit, baseUnit, selectedWargear, selectedUpgrade
                       {full && (
                         <>
                           <div className="unit-psychic-card-stats">
-                            <span><strong>Type:</strong> {full.powerType}</span>
-                            <span><strong>Range:</strong> {full.range}</span>
-                            <span><strong>Target:</strong> {full.target}</span>
-                            <span><strong>Timing:</strong> {full.timing}</span>
+                            <span><strong>{t('unitInfo.type') + ':'}</strong> {full.powerType}</span>
+                            <span><strong>{t('unitInfo.range') + ':'}</strong> {full.range}</span>
+                            <span><strong>{t('unitInfo.target')}</strong> {full.target}</span>
+                            <span><strong>{t('unitInfo.timing')}</strong> {full.timing}</span>
                           </div>
                           <p className="unit-psychic-card-desc">{full.description}</p>
                         </>
@@ -428,7 +426,7 @@ export function UnitInfoModal({ unit, baseUnit, selectedWargear, selectedUpgrade
           {/* ── Mutations / Gifts of Chaos ────────────────────────────── */}
           {selectedGiftsOfChaos && selectedGiftsOfChaos.length > 0 && (
             <section className="unit-info-section unit-mutations-section">
-              <h3 className="unit-info-section-title unit-mutations-section-title">☣ Mutations</h3>
+              <h3 className="unit-info-section-title unit-mutations-section-title">{t('unitInfo.mutations')}</h3>
               <div className="unit-mutations-list">
                 {selectedGiftsOfChaos.map(g => {
                   const full = GIFTS_OF_CHAOS.find(x => x.id === g.id);
@@ -454,7 +452,7 @@ export function UnitInfoModal({ unit, baseUnit, selectedWargear, selectedUpgrade
                       )}
                       {(full?.grantedKeywords?.length ?? 0) > 0 && (
                         <div className="unit-mutation-kw-row">
-                          <span className="unit-mutation-kw-label">Grants:</span>
+                          <span className="unit-mutation-kw-label">{t('unitInfo.grants')}</span>
                           {full!.grantedKeywords!.map(kw => (
                             <KeywordChip key={kw} keyword={kw} className="unit-mutation-kw-chip" />
                           ))}
@@ -481,22 +479,22 @@ export function UnitInfoModal({ unit, baseUnit, selectedWargear, selectedUpgrade
               {isEliteEligible(warbandUnit) && (
                 <>
                   <div className="unit-ep-xp-row">
-                    <span className="unit-ep-xp-label">Experience Points (XP)</span>
+                    <span className="unit-ep-xp-label">{t('unitInfo.experiencePoints')}</span>
                     <span className="unit-ep-xp-value">{warbandUnit.xp ?? 0}</span>
                     {warbandUnit.isPromoted && (
-                      <span className="unit-ep-promoted-badge">Promoted</span>
+                      <span className="unit-ep-promoted-badge">{t('unitInfo.promoted')}</span>
                     )}
                   </div>
 
                   {(warbandUnit.campaignSkills?.length ?? 0) > 0 && (
                     <div className="unit-ep-subsection">
-                      <h4 className="unit-ep-sub-title">Campaign Skills</h4>
+                      <h4 className="unit-ep-sub-title">{t('unitInfo.campaignSkills')}</h4>
                       <ul className="unit-ep-list">
                         {warbandUnit.campaignSkills!.map(s => (
                           <li key={s.id} className="unit-ep-item">
                             <div className="unit-ep-item-header">
                               <span className="unit-ep-item-name">{s.name}</span>
-                              <span className="unit-ep-item-tag">{SKILL_TABLE_LABELS[s.table]} — roll {s.roll}</span>
+                              <span className="unit-ep-item-tag">{SKILL_TABLE_LABELS[s.table]} {t('unitInfo.roll')} {s.roll}</span>
                             </div>
                             <p className="unit-ep-item-desc">{s.description}</p>
                           </li>
@@ -510,17 +508,17 @@ export function UnitInfoModal({ unit, baseUnit, selectedWargear, selectedUpgrade
               {/* Battle Scars + Traumas — all units */}
               {(warbandUnit.scarCount ?? 0) > 0 && (
                 <div className="unit-ep-subsection">
-                  <h4 className="unit-ep-sub-title">Battle Scars</h4>
+                  <h4 className="unit-ep-sub-title">{t('unitInfo.battleScars')}</h4>
                   <p className="unit-ep-item-desc">
                     {warbandUnit.scarCount}/3
-                    {(warbandUnit.scarCount ?? 0) >= 3 && <strong> — Model permanently removed from roster.</strong>}
+                    {(warbandUnit.scarCount ?? 0) >= 3 && <strong>{t('unitInfo.removedFromRoster')}</strong>}
                   </p>
                 </div>
               )}
 
               {(warbandUnit.traumas?.length ?? 0) > 0 && (
                 <div className="unit-ep-subsection">
-                  <h4 className="unit-ep-sub-title">Traumas</h4>
+                  <h4 className="unit-ep-sub-title">{t('unitInfo.traumas')}</h4>
                   <ul className="unit-ep-list">
                     {warbandUnit.traumas!.map(t => (
                       <li key={t.id} className="unit-ep-item">
@@ -539,7 +537,7 @@ export function UnitInfoModal({ unit, baseUnit, selectedWargear, selectedUpgrade
           {/* ── Abilities ────────────────────────────────────────── */}
           {regularAbilities.length > 0 && (
             <section className="unit-info-section">
-              <h3 className="unit-info-section-title">Abilities</h3>
+              <h3 className="unit-info-section-title">{t('unitInfo.abilities')}</h3>
               <ul className="unit-info-abilities">
                 {regularAbilities.map(ab => (
                   <li key={ab.id}>
@@ -552,7 +550,7 @@ export function UnitInfoModal({ unit, baseUnit, selectedWargear, selectedUpgrade
 
           {/* ── Keywords ─────────────────────────────────────────── */}
           <section className="unit-info-section">
-            <h3 className="unit-info-section-title">Keywords</h3>
+            <h3 className="unit-info-section-title">{t('unitInfo.keywords')}</h3>
             <div className="unit-info-keywords">
               {unit.keywords.map(kw => (
                 <KeywordChip key={kw} keyword={kw} className="unit-kw-tag" />

@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Warband, CampaignState, CampaignShopContact } from '../types/index.js';
 import {
   MISSION_TABLES, getBracket, getExplorationDiceCount,
@@ -99,6 +100,7 @@ export function CampaignManager({
 
   // ── Local UI state ────────────────────────────────────────────
   const [activeTab, setActiveTab] = useState<'overview' | 'missions' | 'exploration' | 'resources' | 'skills' | 'patron' | 'guide'>('overview');
+  const { t } = useTranslation();
   const [missionRoll, setMissionRoll] = useState<number | null>(null);
   const [explorationDice, setExplorationDice] = useState<number[]>([]);
   const [explorationAssignment, setExplorationAssignment] = useState<Record<string, number[]>>({});
@@ -178,7 +180,7 @@ export function CampaignManager({
       <div className="campaign-modal" onClick={e => e.stopPropagation()}>
         {/* ── Header ──────────────────────────────────────────── */}
         <div className="campaign-header">
-          <h2>Campaign Manager</h2>
+          <h2>{t('campaign.title')}</h2>
           <button className="campaign-close" onClick={onClose}>✕</button>
         </div>
 
@@ -198,7 +200,7 @@ export function CampaignManager({
             <div className="campaign-overview">
               <div className="campaign-stat-grid">
                 <div className="campaign-stat">
-                  <label>Game #</label>
+                  <label>{t('campaign.game')}</label>
                   <div className="campaign-stat-controls">
                     <button onClick={() => update({ gameNumber: Math.max(1, campaign.gameNumber - 1) })}>−</button>
                     <span className="campaign-stat-value">{campaign.gameNumber}</span>
@@ -208,7 +210,7 @@ export function CampaignManager({
                 </div>
 
                 <div className="campaign-stat">
-                  <label>Campaign VP</label>
+                  <label>{t('campaign.campaignVP')}</label>
                   <div className="campaign-stat-controls">
                     <button onClick={() => update({ campaignVP: Math.max(0, campaign.campaignVP - 1) })}>−</button>
                     <span className="campaign-stat-value">{campaign.campaignVP}</span>
@@ -217,7 +219,7 @@ export function CampaignManager({
                 </div>
 
                 <div className="campaign-stat">
-                  <label>Reserve Credits</label>
+                  <label>{t('campaign.reserveCredits')}</label>
                   <div className="campaign-stat-controls">
                     <button onClick={() => update({ reserveCredits: Math.max(0, campaign.reserveCredits - 25) })}>−25</button>
                     <span className="campaign-stat-value">{campaign.reserveCredits}</span>
@@ -226,7 +228,7 @@ export function CampaignManager({
                 </div>
 
                 <div className="campaign-stat">
-                  <label>Reserve Glory</label>
+                  <label>{t('campaign.reserveGlory')}</label>
                   <div className="campaign-stat-controls">
                     <button onClick={() => update({ reserveGlory: Math.max(0, campaign.reserveGlory - 1) })}>−</button>
                     <span className="campaign-stat-value">{campaign.reserveGlory}</span>
@@ -237,34 +239,34 @@ export function CampaignManager({
 
               {/* Shop contacts */}
               <div className="campaign-section">
-                <h3>Shop Contacts</h3>
+                <h3>{t('campaign.shopContacts')}</h3>
                 {campaign.shopContacts.length === 0 ? (
-                  <p className="campaign-empty">No shop contacts established yet.</p>
+                  <p className="campaign-empty">{t('campaign.noShopContacts')}</p>
                 ) : (
                   <div className="campaign-contact-list">
                     {campaign.shopContacts.map(c => (
                       <div key={c.name} className="campaign-contact">
-                        <span>{c.name} — up to {c.maxGloryCost} Glory</span>
-                        <button onClick={() => removeShopContact(c.name)} title="Remove">✕</button>
+                        <span>{c.name} {t('campaign.upTo')} {c.maxGloryCost} {t('campaign.glory')}</span>
+                        <button onClick={() => removeShopContact(c.name)} title={t('campaign.remove')}>✕</button>
                       </div>
                     ))}
                   </div>
                 )}
                 <div className="campaign-contact-add">
-                  <button onClick={() => addShopContact({ name: 'Supplier', maxGloryCost: 3 })}>+ Supplier (≤3)</button>
-                  <button onClick={() => addShopContact({ name: 'Black Market', maxGloryCost: 7 })}>+ Black Market (≤7)</button>
-                  <button onClick={() => addShopContact({ name: 'Secret Dealer', maxGloryCost: 999 })}>+ Secret Dealer (any)</button>
+                  <button onClick={() => addShopContact({ name: 'Supplier', maxGloryCost: 3 })}>{t('campaign.addSupplier')}</button>
+                  <button onClick={() => addShopContact({ name: 'Black Market', maxGloryCost: 7 })}>{t('campaign.addBlackMarket')}</button>
+                  <button onClick={() => addShopContact({ name: 'Secret Dealer', maxGloryCost: 999 })}>{t('campaign.addSecretDealer')}</button>
                 </div>
               </div>
 
               {/* Notes field */}
               <div className="campaign-section">
-                <h3>Campaign Notes</h3>
+                <h3>{t('campaign.campaignNotes')}</h3>
                 <textarea
                   className="campaign-notes"
                   value={campaign.notes}
                   onChange={e => update({ notes: e.target.value })}
-                  placeholder="Jot down anything relevant to your campaign…"
+                  placeholder={t('campaign.notesPlaceholder')}
                   rows={4}
                 />
               </div>
@@ -275,13 +277,13 @@ export function CampaignManager({
           {activeTab === 'missions' && (
             <div className="campaign-missions">
               <div className="campaign-section">
-                <h3>{missionTable.label} — Roll {missionTable.diceType}</h3>
+                <h3>{missionTable.label} {t('campaign.roll')} {missionTable.diceType}</h3>
                 <button className="campaign-roll-btn" onClick={handleRollMission}>
-                  🎲 Roll Mission
+                  {t('campaign.rollMission')}
                 </button>
                 {missionRoll !== null && (
                   <div className="campaign-roll-result">
-                    Rolled: <strong>{missionRoll}</strong>
+                    {t('campaign.rolled')} <strong>{missionRoll}</strong>
                   </div>
                 )}
               </div>
@@ -295,7 +297,7 @@ export function CampaignManager({
                     <div className="campaign-mission-roll">{m.roll}</div>
                     <div className="campaign-mission-info">
                       <strong>{m.name}</strong>
-                      {m.isOriginal && <span className="mission-tag-original">TC</span>}
+                      {m.isOriginal && <span className="mission-tag-original">{t('campaign.tc')}</span>}
                       <p>{m.description}</p>
                     </div>
                   </div>
@@ -308,12 +310,12 @@ export function CampaignManager({
           {activeTab === 'exploration' && (
             <div className="campaign-exploration">
               <div className="campaign-section">
-                <h3>Exploration — {explorationDiceCount} Dice</h3>
+                <h3>Exploration — {t('campaign.exploration')} {explorationDiceCount} {t('campaign.dice')}</h3>
                 <p className="campaign-hint">
-                  Available tables: {availableTables.map(t => EXPLORATION_TABLES[t].label).join(', ')}
+                  {t('campaign.availableTables')} {availableTables.map(t => EXPLORATION_TABLES[t].label).join(', ')}
                 </p>
                 <button className="campaign-roll-btn" onClick={handleRollExploration}>
-                  🎲 Roll {explorationDiceCount} Exploration Dice
+                  🎲 {t('campaign.rollExploration')} {explorationDiceCount} {t('campaign.explorationDice')}
                 </button>
               </div>
 
@@ -353,15 +355,15 @@ export function CampaignManager({
                       if (total === 0) return null;
                       return (
                         <div key={table} className="campaign-explore-result">
-                          <h4>{EXPLORATION_TABLES[table].label} Table — Total: {total}</h4>
+                          <h4>{EXPLORATION_TABLES[table].label} {t('campaign.tableTotal')} {total}</h4>
                           {location ? (
                             <div className="explore-location">
                               <div className="explore-location-name">
-                                <strong>{location.name}</strong> (result {location.result}+)
+                                <strong>{location.name}</strong> ({t('campaign.result')} {location.result}+)
                               </div>
                               {location.universalChoices.length > 0 && (
                                 <div className="explore-choices">
-                                  <div className="explore-choices-label">Universal:</div>
+                                  <div className="explore-choices-label">{t('campaign.universal')}</div>
                                   {location.universalChoices.map(c => (
                                     <div key={c.name} className="explore-choice">
                                       <strong>{c.name}:</strong> {c.description}
@@ -371,7 +373,7 @@ export function CampaignManager({
                               )}
                               {location.factionChoices.length > 0 && (
                                 <div className="explore-choices faction">
-                                  <div className="explore-choices-label">Faction-specific:</div>
+                                  <div className="explore-choices-label">{t('campaign.factionSpecific')}</div>
                                   {location.factionChoices.map(c => (
                                     <div key={c.name} className="explore-choice">
                                       <strong>{c.name}</strong> <span className="explore-condition">{c.conditionLabel}</span>: {c.description}
@@ -382,7 +384,7 @@ export function CampaignManager({
                             </div>
                           ) : (
                             <div className="explore-location-empty">
-                              No location found (total too low for this table).
+                              {t('campaign.noLocation')}
                             </div>
                           )}
                         </div>
@@ -395,7 +397,7 @@ export function CampaignManager({
               {/* Explored history */}
               {campaign.exploredLocations.length > 0 && (
                 <div className="campaign-section">
-                  <h3>Explored Locations</h3>
+                  <h3>{t('campaign.exploredLocations')}</h3>
                   <div className="campaign-explored-list">
                     {campaign.exploredLocations.map((name, i) => (
                       <span key={i} className="explored-tag">{name}</span>
@@ -411,7 +413,7 @@ export function CampaignManager({
             <div className="campaign-resources">
               {factionResourceDefs.length === 0 ? (
                 <div className="campaign-empty">
-                  This faction has no tracked campaign resources.
+                  {t('campaign.noResources')}
                 </div>
               ) : (
                 <div className="campaign-resource-grid">
@@ -436,9 +438,9 @@ export function CampaignManager({
           {/* ── SKILLS TAB ───────────────────────────────────── */}
           {activeTab === 'skills' && (            <div className="campaign-skills">
               <div className="campaign-section">
-                <h3>Exploration Skills</h3>
+                <h3>{t('campaign.explorationSkills')}</h3>
                 {campaign.explorationSkills.length === 0 ? (
-                  <p className="campaign-empty">No exploration skills acquired yet.</p>
+                  <p className="campaign-empty">{t('campaign.noSkills')}</p>
                 ) : (
                   <div className="campaign-skill-list">
                     {campaign.explorationSkills.map((skill, i) => (
@@ -447,14 +449,14 @@ export function CampaignManager({
                         {EXPLORATION_SKILL_DEFS[skill] && (
                           <span className="campaign-skill-desc"> — {EXPLORATION_SKILL_DEFS[skill]}</span>
                         )}
-                        <button onClick={() => removeExplorationSkill(i)} title="Remove">✕</button>
+                        <button onClick={() => removeExplorationSkill(i)} title={t('campaign.remove')}>✕</button>
                       </div>
                     ))}
                   </div>
                 )}
 
                 <div className="campaign-skill-add">
-                  <span>Add skill:</span>
+                  <span>{t('campaign.addSkill')}</span>
                   {Object.keys(EXPLORATION_SKILL_DEFS).map(skill => (
                     <button key={skill} onClick={() => addExplorationSkill(skill)}>
                       {skill}
@@ -465,7 +467,7 @@ export function CampaignManager({
 
               {/* Skill reference */}
               <div className="campaign-section">
-                <h3>Skill Reference</h3>
+                <h3>{t('campaign.skillReference')}</h3>
                 <div className="campaign-skill-ref">
                   {Object.entries(EXPLORATION_SKILL_DEFS).map(([name, desc]) => (
                     <div key={name} className="skill-ref-entry">
@@ -483,8 +485,8 @@ export function CampaignManager({
             <div className="campaign-patron">
               {!selectedPatron ? (
                 <div className="campaign-empty">
-                  <p>No Patron selected for this warband.</p>
-                  <p className="campaign-hint">Select a Patron in the Army Builder to see their abilities here.</p>
+                  <p>{t('campaign.noPatron')}</p>
+                  <p className="campaign-hint">{t('campaign.selectPatron')}</p>
                 </div>
               ) : (
                 <>
@@ -497,9 +499,9 @@ export function CampaignManager({
                   </div>
 
                   <div className="campaign-section">
-                    <h3>Patron Skills</h3>
+                    <h3>{t('campaign.patronSkills')}</h3>
                     <p className="campaign-hint">
-                      When a model rolls a 2 or 12 on any Skill table, they may choose one of these Patron Skills.
+                      When a model rolls a 2 or 12 on any Skill table, they may choose one of these {t('campaign.patronSkills')}.
                     </p>
                     <ul className="campaign-patron-skills">
                       {patronAbilities.map((ability, i) => (
@@ -512,9 +514,9 @@ export function CampaignManager({
 
                   {activeWarbandEffects.length > 0 && (
                     <div className="campaign-section">
-                      <h3>Active Warband Effects</h3>
+                      <h3>{t('campaign.activeEffects')}</h3>
                       <p className="campaign-hint">
-                        These Patron Skills are held by models in your warband and provide ongoing benefits during campaign phases.
+                        These {t('campaign.patronSkills')} are held by models in your warband and provide ongoing benefits during campaign phases.
                       </p>
                       {(['cost', 'limit', 'income', 'battle'] as PatronWarbandEffectCategory[]).map(cat => {
                         const effects = activeWarbandEffects.filter(e => e.category === cat);
@@ -540,14 +542,14 @@ export function CampaignManager({
                   )}
 
                   <div className="campaign-section campaign-patrons-visit">
-                    <h3>⚜ Patron's Visit</h3>
+                    <h3>{t('campaign.patronsVisit')}</h3>
                     <p className="campaign-hint">
                       During the Campaign Phase, your Patron may intercede on your behalf.
-                      Spend 1 Reserve Glory to gain 1 Campaign Victory Point — a direct translation of divine favour into strategic advantage.
+                      Spend 1 {t('campaign.reserveGloryLabel')} to gain 1 Campaign Victory Point — a direct translation of divine favour into strategic advantage.
                     </p>
                     <div className="campaign-patrons-visit-row">
                       <div className="campaign-patrons-visit-stat">
-                        <span className="campaign-patrons-visit-label">Reserve Glory</span>
+                        <span className="campaign-patrons-visit-label">{t('campaign.reserveGlory')}</span>
                         <span className="campaign-patrons-visit-value">{campaign.reserveGlory}</span>
                       </div>
                       <button
@@ -558,10 +560,10 @@ export function CampaignManager({
                           campaignVP: campaign.campaignVP + 1,
                         })}
                       >
-                        Exchange 1 Glory → 1 Campaign VP
+                        {t('campaign.exchange')}
                       </button>
                       <div className="campaign-patrons-visit-stat">
-                        <span className="campaign-patrons-visit-label">Campaign VP</span>
+                        <span className="campaign-patrons-visit-label">{t('campaign.campaignVP')}</span>
                         <span className="campaign-patrons-visit-value">{campaign.campaignVP}</span>
                       </div>
                     </div>
@@ -575,7 +577,7 @@ export function CampaignManager({
           {activeTab === 'guide' && (
             <div className="campaign-guide">
               <p className="campaign-guide-intro">
-                Step-by-step walkthrough of how the <strong>Patron system</strong> works across every phase of your campaign.
+                t('campaign.guideIntro') <strong>t('campaign.patronSystem')</strong> t('campaign.guideOutro')
               </p>
               {PATRON_GUIDE_STEPS.map((step, i) => (
                 <div key={i} className="campaign-guide-step">
@@ -599,7 +601,7 @@ export function CampaignManager({
                     )}
                     {step.tip && (
                       <div className="campaign-guide-tip">
-                        <span className="campaign-guide-tip-label">Tip</span>
+                        <span className="campaign-guide-tip-label">{t('campaign.tip')}</span>
                         {step.tip}
                       </div>
                     )}

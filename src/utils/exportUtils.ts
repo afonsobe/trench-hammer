@@ -1,3 +1,4 @@
+import i18n from '../i18n/index.js';
 import { Warband } from '../types/index.js';
 import { expandKeywords } from '../data/keywordGlossary.js';
 
@@ -12,7 +13,7 @@ export function exportWarbandAsText(warband: Warband, pointLimit: number, gloryL
 
   text += `Warband Name: ${warband.name}\n`;
   text += `Faction: ${warband.faction}\n`;
-  text += `Date: ${new Date().toLocaleDateString()}\n\n`;
+  text += `Date: ${new Date().toLocaleDateString(i18n.language)}\n\n`;
 
   text += 'UNITS:\n';
   text += '-'.repeat(60) + '\n';

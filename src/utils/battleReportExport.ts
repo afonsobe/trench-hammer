@@ -6,6 +6,7 @@
  */
 
 import type { BattleReport, BattleActivation, BattleAction, AttackRoll } from '../types/battleReport.js';
+import i18n from '../i18n/index.js';
 
 function line(ch = '─', n = 60): string {
   return ch.repeat(n);
@@ -86,7 +87,7 @@ export function exportBattleReport(report: BattleReport): string {
   sections.push(line('═'));
   sections.push('');
 
-  const date = new Date(report.createdAt).toLocaleDateString(undefined, {
+  const date = new Date(report.createdAt).toLocaleDateString(i18n.language, {
     year: 'numeric', month: 'long', day: 'numeric',
   });
   sections.push(`  Date:     ${date}`);

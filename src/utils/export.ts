@@ -1,3 +1,4 @@
+import i18n from '../i18n/index.js';
 import { Warband } from '../types/index.js';
 import { getFactionById } from '../data/factions_complete.js';
 import { ALL_MERCENARIES } from '../data/mercenaries.js';
@@ -137,7 +138,7 @@ export function exportWarbandAsText(warband: Warband, pointLimit: number, gloryL
 
   text += `Warband Name: ${warband.name}\n`;
   text += `Faction: ${warband.faction}\n`;
-  text += `Date: ${new Date().toLocaleDateString()}\n\n`;
+  text += `Date: ${new Date().toLocaleDateString(i18n.language)}\n\n`;
 
   text += 'UNITS:\n';
   text += '-'.repeat(60) + '\n';
@@ -224,7 +225,7 @@ export function exportWarbandAsMD(warband: Warband): string {
   const totalGlory   = unitGlory + mercGlory;
   const totalModels  = warband.units.reduce((sum, u) => sum + u.count, 0);
   const totalMercs   = (warband.mercenaries ?? []).reduce((sum, m) => sum + m.count, 0);
-  const date = new Date().toLocaleDateString();
+  const date = new Date().toLocaleDateString(i18n.language);
 
   let md = `# ⚔️ ${warband.name}\n`;
   md += `### Trench Hammer — Warband Roster\n\n`;

@@ -1,4 +1,5 @@
 import { Warband, ValidationResult, ValidationError, ValidationWarning } from '../types/index.js';
+import i18n from '../i18n/index.js';
 
 const CAPPED_CULTIST_UNIT_IDS = new Set([
   'ha_chaos_cultist',
@@ -79,7 +80,7 @@ export function validateWarband(warband: Warband): ValidationResult {
   if (totalPoints > warband.pointLimit) {
     errors.push({
       code: 'POINTS_EXCEEDED',
-      message: `Warband exceeds credit limit: ${totalPoints} / ${warband.pointLimit} Credits`,
+      message: i18n.t('validation.pointsExceeded', { total: totalPoints, limit: warband.pointLimit }),
       severity: 'error',
     });
   }
@@ -91,13 +92,13 @@ export function validateWarband(warband: Warband): ValidationResult {
   if (warband.gloryLimit === 0 && totalGlory > 0) {
     errors.push({
       code: 'GLORY_EXCEEDED',
-      message: `Warband is spending ${totalGlory} Glory but Glory Limit is set to 0 (disabled)`,
+      message: i18n.t('validation.gloryDisabled', { glory: totalGlory }),
       severity: 'error',
     });
   } else if (warband.gloryLimit > 0 && totalGlory > warband.gloryLimit) {
     errors.push({
       code: 'GLORY_EXCEEDED',
-      message: `Warband exceeds glory limit: ${totalGlory} / ${warband.gloryLimit} Glory`,
+      message: i18n.t('validation.gloryExceeded', { glory: totalGlory, limit: warband.gloryLimit }),
       severity: 'error',
     });
   }
@@ -107,7 +108,7 @@ export function validateWarband(warband: Warband): ValidationResult {
   if (totalModels === 0) {
     errors.push({
       code: 'NO_MODELS',
-      message: 'Warband must contain at least one model',
+      message: i18n.t('validation.noModels'),
       severity: 'error',
     });
   }
@@ -119,14 +120,14 @@ export function validateWarband(warband: Warband): ValidationResult {
   if (leaderCount < GAME_RULES.minLeaders) {
     warnings.push({
       code: 'MIN_LEADERS',
-      message: `Recommended minimum ${GAME_RULES.minLeaders} leader(s), you have ${leaderCount}`,
+      message: i18n.t('validation.minLeaders', { min: GAME_RULES.minLeaders, count: leaderCount }),
     });
   }
 
   if (leaderCount > GAME_RULES.maxLeaders) {
     errors.push({
       code: 'MAX_LEADERS',
-      message: `Maximum ${GAME_RULES.maxLeaders} leaders allowed, you have ${leaderCount}`,
+      message: i18n.t('validation.maxLeaders', { max: GAME_RULES.maxLeaders, count: leaderCount }),
       severity: 'error',
     });
   }
@@ -134,7 +135,7 @@ export function validateWarband(warband: Warband): ValidationResult {
   if (troopCount < GAME_RULES.minTroops) {
     warnings.push({
       code: 'MIN_TROOPS',
-      message: `Recommended minimum ${GAME_RULES.minTroops} troop(s), you have ${troopCount}`,
+      message: i18n.t('validation.minTroops', { min: GAME_RULES.minTroops, count: troopCount }),
     });
   }
 
@@ -145,7 +146,7 @@ export function validateWarband(warband: Warband): ValidationResult {
   if (cultistModels > nonCultistModels) {
     errors.push({
       code: 'CULTIST_MAX_EXCEEDED',
-      message: `Cultist models exceed the number of other non-merc models: ${cultistModels} / ${nonCultistModels}`,
+      message: i18n.t('validation.cultistMax', { cultists: cultistModels, others: nonCultistModels }),
       severity: 'error',
     });
   }
@@ -167,7 +168,7 @@ export function validateUnitSelection(
   if (unitCount < minCount) {
     errors.push({
       code: 'UNIT_MIN',
-      message: `Unit requires minimum ${minCount} model(s)`,
+      message: i18n.t('validation.unitMin', { min: minCount }),
       severity: 'error',
     });
   }
@@ -175,7 +176,7 @@ export function validateUnitSelection(
   if (unitCount > maxCount) {
     errors.push({
       code: 'UNIT_MAX',
-      message: `Unit cannot exceed maximum ${maxCount} model(s)`,
+      message: i18n.t('validation.unitMax', { max: maxCount }),
       severity: 'error',
     });
   }
@@ -195,7 +196,7 @@ export function validateKeywordSynergy(
   if (!hasFactionKeyword && !unitKeywords.includes('MERCENARY')) {
     errors.push({
       code: 'FACTION_MISMATCH',
-      message: 'Unit does not match warband faction (unless it is a MERCENARY)',
+      message: i18n.t('validation.factionMismatch'),
       severity: 'error',
     });
   }

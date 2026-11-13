@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { flushSync } from 'react-dom';
 import { BattleReportLog } from './BattleReportLog.js';
 import type { BattleReport } from '../types/battleReport.js';
@@ -89,6 +90,7 @@ function UnitCard({
   warbandUnit: WarbandUnit;
   onEditCampaign: () => void;
 }) {
+  const { t } = useTranslation();
   const [infoItem, setInfoItem] = useState<{ item: Weapon | WargearOption; catType: 'weapon' | 'armor' | 'equipment' } | null>(null);
   const base = baseUnit.stats;
   const eff = resolved.stats;
@@ -138,10 +140,10 @@ function UnitCard({
         <div className="bm-card-header-left">
           <h3 className="bm-card-name">{displayName}</h3>
           <span className="bm-card-meta">
-            {resolved.unitType === 'elite' ? 'Elite' : 'Troop'} · ×{warbandUnit.count} · {warbandUnit.totalCost} Credits
+            {resolved.unitType === 'elite' ? 'Elite' : 'Troop'} · ×{warbandUnit.count} · {warbandUnit.totalCost} {t('battle.credits')}
           </span>
         </div>
-        {warbandUnit.isPromoted && <span className="bm-promoted-badge">★ Promoted</span>}
+        {warbandUnit.isPromoted && <span className="bm-promoted-badge">{t('battle.promoted')}</span>}
       </div>
 
       {/* Sub-type banner */}
@@ -155,11 +157,11 @@ function UnitCard({
       <table className="bm-stats-table">
         <thead>
           <tr>
-            <th>Movement</th>
-            <th>Ranged</th>
-            <th>Melee</th>
-            <th>Armour</th>
-            <th>Base</th>
+            <th>{t('battle.movement')}</th>
+            <th>{t('battle.ranged')}</th>
+            <th>{t('battle.melee')}</th>
+            <th>{t('battle.armour')}</th>
+            <th>{t('battle.base')}</th>
           </tr>
         </thead>
         <tbody>
@@ -205,10 +207,10 @@ function UnitCard({
       {/* Default Battlekit weapons */}
       {defWeapons.length > 0 && (
         <div className="bm-section">
-          <h4 className="bm-section-title">Default Battlekit</h4>
+          <h4 className="bm-section-title">{t('battle.defaultBattlekit')}</h4>
           <table className="bm-weapons-table">
             <thead>
-              <tr><th>Weapon</th><th>Type</th><th>Range</th><th>Rules</th><th></th></tr>
+              <tr><th>{t('battle.weapon')}</th><th>{t('battle.type')}</th><th>{t('battle.range')}</th><th>{t('battle.rules')}</th><th></th></tr>
             </thead>
             <tbody>
               {defWeapons.map(w => (
@@ -235,7 +237,7 @@ function UnitCard({
       {/* Default gear */}
       {defGear.length > 0 && (
         <div className="bm-section">
-          {defWeapons.length === 0 && <h4 className="bm-section-title">Default Battlekit</h4>}
+          {defWeapons.length === 0 && <h4 className="bm-section-title">{t('battle.defaultBattlekit')}</h4>}
           <ul className="bm-gear-list">
             {defGear.map(g => (
               <li key={g.id}>
@@ -251,10 +253,10 @@ function UnitCard({
       {/* Equipped weapons */}
       {equippedWeapons.length > 0 && (
         <div className="bm-section">
-          <h4 className="bm-section-title">Equipped Weapons</h4>
+          <h4 className="bm-section-title">{t('battle.equippedWeapons')}</h4>
           <table className="bm-weapons-table">
             <thead>
-              <tr><th>Weapon</th><th>Type</th><th>Range</th><th>Rules</th><th></th></tr>
+              <tr><th>{t('battle.weapon')}</th><th>{t('battle.type')}</th><th>{t('battle.range')}</th><th>{t('battle.rules')}</th><th></th></tr>
             </thead>
             <tbody>
               {equippedWeapons.map(({ sw, w }) => (
@@ -274,7 +276,7 @@ function UnitCard({
       {/* Equipped battlekit */}
       {equippedBattlekit.length > 0 && (
         <div className="bm-section">
-          <h4 className="bm-section-title">Equipped Battlekit</h4>
+          <h4 className="bm-section-title">{t('battle.equippedBattlekit')}</h4>
           <ul className="bm-gear-list">
             {equippedBattlekit.map(({ sw, g }) => (
               <li key={sw.id}>
@@ -293,7 +295,7 @@ function UnitCard({
         if (activeUpgs.length === 0) return null;
         return (
           <div className="bm-section">
-            <h4 className="bm-section-title">⬆ Upgrades</h4>
+            <h4 className="bm-section-title">{t('battle.upgrades')}</h4>
             {activeUpgs.map(upg => (
               <div key={upg.id} className="bm-upgrade-item">
                 <strong>{upg.name}</strong>
@@ -314,12 +316,12 @@ function UnitCard({
       {/* Innate psychic abilities from default battlekit */}
       {defPsychicGear.length > 0 && (
         <div className="bm-section">
-          <h4 className="bm-section-title">✨ Innate Psychic Powers</h4>
+          <h4 className="bm-section-title">{t('battle.innatePsychic')}</h4>
           {defPsychicGear.map(g => (
             <div key={g.id} className="bm-psychic-card">
               <div className="bm-psychic-header">
                 <strong>{g.name}</strong>
-                <span className="bm-psychic-meta">Innate · Included in cost</span>
+                <span className="bm-psychic-meta">{t('battle.innateIncluded')}</span>
               </div>
               {g.description && <p className="bm-psychic-desc">{g.description}</p>}
             </div>
@@ -330,7 +332,7 @@ function UnitCard({
       {/* Psychic powers */}
       {psychicPowers.length > 0 && (
         <div className="bm-section">
-          <h4 className="bm-section-title">✨ Psychic Powers</h4>
+          <h4 className="bm-section-title">{t('battle.psychicPowers')}</h4>
           {psychicPowers.map(sp => {
             const full = lookupPsychicPower(sp.disciplineId, sp.id);
             return (
@@ -349,7 +351,7 @@ function UnitCard({
       {/* Gifts of Chaos */}
       {gifts.length > 0 && (
         <div className="bm-section">
-          <h4 className="bm-section-title">☣ Mutations</h4>
+          <h4 className="bm-section-title">{t('battle.mutations')}</h4>
           {gifts.map(g => {
             const full = GIFTS_OF_CHAOS.find(x => x.id === g.id);
             return (
@@ -369,7 +371,7 @@ function UnitCard({
           {isEliteEligible(warbandUnit)
             ? `★ Elite Progression — XP: ${warbandUnit.xp ?? 0}`
             : '☠ Campaign Record'}
-          <button className="bm-edit-campaign-btn" onClick={onEditCampaign} title="Edit Battle Scars and Traumas">✎ Edit</button>
+          <button className="bm-edit-campaign-btn" onClick={onEditCampaign} title={t('battle.editScars')}>{t('battle.edit')}</button>
         </h4>
         {isEliteEligible(warbandUnit) && (warbandUnit.campaignSkills?.length ?? 0) > 0 && (
           <ul className="bm-progression-list">
@@ -382,14 +384,14 @@ function UnitCard({
         )}
           {(warbandUnit.scarCount ?? 0) > 0 && (
             <p className="bm-progression-scars">
-              <strong>Battle Scars:</strong> {warbandUnit.scarCount}/3
-              {(warbandUnit.scarCount ?? 0) >= 3 && <span className="bm-scar-dead"> — DEAD</span>}
+              <strong>{t('battle.battleScars')}</strong> {warbandUnit.scarCount}/3
+              {(warbandUnit.scarCount ?? 0) >= 3 && <span className="bm-scar-dead"> {t('battle.dead')}</span>}
             </p>
           )}
         {(warbandUnit.traumas?.length ?? 0) > 0 && (
           <ul className="bm-progression-list bm-traumas">
-            {warbandUnit.traumas!.map(t => (
-              <li key={t.id}><strong>Trauma — {t.name}:</strong> {t.description}</li>
+            {warbandUnit.traumas!.map(trauma => (
+              <li key={trauma.id}><strong>{t('battle.trauma')} {trauma.name}:</strong> {trauma.description}</li>
             ))}
           </ul>
         )}
@@ -398,7 +400,7 @@ function UnitCard({
       {/* Abilities */}
       {regularAbilities.length > 0 && (
         <div className="bm-section">
-          <h4 className="bm-section-title">Abilities</h4>
+          <h4 className="bm-section-title">{t('battle.abilities')}</h4>
           <ul className="bm-abilities-list">
             {regularAbilities.map(ab => (
               <li key={ab.id}><strong>{ab.name}.</strong> {ab.description}</li>
@@ -427,6 +429,7 @@ function UnitCard({
 // ── Mercenary Card ───────────────────────────────────────────────────────────
 
 function MercenaryCard({ wm }: { wm: WarbandMercenary }) {
+  const { t } = useTranslation();
   const def = ALL_MERCENARIES.find(m => m.id === wm.mercenaryId);
   if (!def) return null;
 
@@ -454,7 +457,7 @@ function MercenaryCard({ wm }: { wm: WarbandMercenary }) {
         <div className="bm-card-header-left">
           <h3 className="bm-card-name">{def.name}</h3>
           <span className="bm-card-meta">
-            Mercenary · {def.subcategory} · ×{wm.count} · {wm.gloryCost} Glory
+            {t('battle.mercenary')} {def.subcategory} · ×{wm.count} · {wm.gloryCost} {t('battle.glory')}
           </span>
         </div>
       </div>
@@ -486,10 +489,10 @@ function MercenaryCard({ wm }: { wm: WarbandMercenary }) {
       {/* Weapons */}
       {weapons && weapons.length > 0 && (
         <div className="bm-section">
-          <h4 className="bm-section-title">Battlekit</h4>
+          <h4 className="bm-section-title">{t('battle.battlekit')}</h4>
           <table className="bm-weapons-table bm-merc-weapons">
             <thead>
-              <tr><th>Name</th><th>Profile / Rules</th></tr>
+              <tr><th>{t('battle.name')}</th><th>{t('battle.profileRules')}</th></tr>
             </thead>
             <tbody>
               {weapons.map((w, i) => (
@@ -506,7 +509,7 @@ function MercenaryCard({ wm }: { wm: WarbandMercenary }) {
       {/* Upgrades */}
       {activeUpgrades.length > 0 && (
         <div className="bm-section">
-          <h4 className="bm-section-title">Upgrades</h4>
+          <h4 className="bm-section-title">{t('battle.upgrades')}</h4>
           <ul className="bm-abilities-list">
             {activeUpgrades.map(u => (
               <li key={u!.id}><strong>{u!.label}.</strong> {u!.description}</li>
@@ -518,7 +521,7 @@ function MercenaryCard({ wm }: { wm: WarbandMercenary }) {
       {/* Abilities */}
       {abilities && abilities.length > 0 && (
         <div className="bm-section">
-          <h4 className="bm-section-title">Abilities</h4>
+          <h4 className="bm-section-title">{t('battle.abilities')}</h4>
           <ul className="bm-abilities-list">
             {abilities.map((ab, i) => (
               <li key={i}><strong>{ab.name}.</strong> {ab.description}</li>
@@ -530,7 +533,7 @@ function MercenaryCard({ wm }: { wm: WarbandMercenary }) {
       {/* Psychic powers */}
       {psychicPowers && psychicPowers.length > 0 && (
         <div className="bm-section">
-          <h4 className="bm-section-title">✨ Psychic Powers</h4>
+          <h4 className="bm-section-title">{t('battle.psychicPowers')}</h4>
           <ul className="bm-abilities-list">
             {psychicPowers.map((p, i) => (
               <li key={i}><strong>{p.name}.</strong> {p.description}</li>
@@ -616,6 +619,8 @@ export function BattleMode({
   // if state propagation hasn't caught up after loading a warband.
   const activeFaction = warband.faction || selectedFaction;
   const activeSubFaction = warband.subfaction ?? selectedSubFaction;
+
+  const { t } = useTranslation();
 
   const factionRules = getFactionRules(activeFaction);
   const factionDef = getFactionById(activeFaction);
@@ -731,9 +736,9 @@ export function BattleMode({
         {/* Header */}
         <header className="bm-header">
           <div className="bm-header-left">
-            <h1 className="bm-title">⚔ Battle Mode</h1>
+            <h1 className="bm-title">{t('battle.battleMode')}</h1>
             <p className="bm-subtitle">
-                {warband.name} — {factionDisplayName} — {livePoints}/{warband.pointLimit || 700} Credits · {liveModels} Models
+                {warband.name} — {factionDisplayName} — {livePoints}/{warband.pointLimit || 700} {t('battle.creditsModels')} {liveModels} {t('builder.models')}
               </p>
             </div>
             <div className="bm-header-actions">
@@ -755,18 +760,18 @@ export function BattleMode({
                   }
                   setShowBattleReport(v => !v);
                 }}
-                title="Toggle Battle Report Log"
+                title={t('battle.toggleReport')}
               >
-                📋 Battle Report
+                {t('battle.battleReport')}
               </button>
-              <button className="bm-rules-ref-btn" onClick={() => setShowRulesReference(true)} title="Quick Rules Reference">
-                📖 Rules
+              <button className="bm-rules-ref-btn" onClick={() => setShowRulesReference(true)} title={t('battle.quickRules')}>
+                {t('battle.rules')}
               </button>
-              <button className="bm-print-btn" onClick={handlePrint} title="Print / Save as PDF">
-                🖨 Print
+              <button className="bm-print-btn" onClick={handlePrint} title={t('battle.print')}>
+                {t('battle.printShort')}
               </button>
-              <button className="bm-close-btn" onClick={onClose} title="Exit Battle Mode">
-                ✕ Exit
+              <button className="bm-close-btn" onClick={onClose} title={t('battle.exit')}>
+                {t('battle.exitShort')}
               </button>
             </div>
           </header>
@@ -777,18 +782,18 @@ export function BattleMode({
               <button
                 className={`bm-rules-side-btn ${showFactionRules ? 'bm-rules-side-btn--active' : ''}`}
                 onClick={() => { setShowFactionRules(v => !v); }}
-                title="Faction Special Rules"
+                title={t('battle.factionRules')}
               >
-                📜 Faction Rules
+                {t('battle.factionRulesShort')}
               </button>
             )}
             {subFactionDef && activeSubFaction !== 'no_variant' && subFactionDef.rules.length > 0 && (
               <button
                 className={`bm-rules-side-btn bm-rules-side-btn--warband ${showWarbandRules ? 'bm-rules-side-btn--active' : ''}`}
                 onClick={() => { setShowWarbandRules(v => !v); }}
-                title="Warband Variant Rules"
+                title={t('battle.warbandRules')}
               >
-                🛡 Warband Rules
+                {t('battle.warbandRulesShort')}
               </button>
             )}
           </div>
@@ -817,7 +822,7 @@ export function BattleMode({
           {showWarbandRules && subFactionDef && activeSubFaction !== 'no_variant' && subFactionDef.rules.length > 0 && (
             <section className="bm-faction-rules bm-subfaction-rules bm-rules-panel">
               <div className="bm-rules-panel-header">
-                <h2 className="bm-faction-rules-title">{subFactionDef.name} — Warband Rules</h2>
+                <h2 className="bm-faction-rules-title">{subFactionDef.name} {t('battle.warbandRulesTitle')}</h2>
                 <button className="bm-rules-panel-close" onClick={() => setShowWarbandRules(false)}>✕</button>
               </div>
               {subFactionDef.description && <p className="bm-subfaction-desc">{subFactionDef.description}</p>}
@@ -833,7 +838,7 @@ export function BattleMode({
         {showBattleReport && (
           <section className="bm-battle-report-panel">
             <div className="bm-battle-report-panel-header">
-              <h2>📋 Battle Report</h2>
+              <h2>{t('battle.battleReport')}</h2>
               <button className="bm-rules-panel-close" onClick={() => setShowBattleReport(false)}>✕</button>
             </div>
             <BattleReportLog
@@ -852,39 +857,39 @@ export function BattleMode({
         {showMatchupLoader && !opponent && (
           <div className="bm-matchup-loader">
             <div className="bm-matchup-loader-header">
-              <h2>Load Opponent's Army</h2>
+              <h2>{t('battle.loadOpponent')}</h2>
               <button className="bm-rules-panel-close" onClick={() => setShowMatchupLoader(false)}>✕</button>
             </div>
             <div className="bm-matchup-tabs">
               <button className={`bm-matchup-tab ${matchupTab === 'paste' ? 'bm-matchup-tab--active' : ''}`} onClick={() => setMatchupTab('paste')}>
-                📋 Paste Link / Data
+                {t('battle.pasteLink')}
               </button>
               <button className={`bm-matchup-tab ${matchupTab === 'library' ? 'bm-matchup-tab--active' : ''}`} onClick={() => setMatchupTab('library')}>
-                📂 From Library
+                {t('battle.fromLibrary')}
               </button>
             </div>
             {matchupTab === 'paste' && (
               <div className="bm-matchup-paste">
                 <p className="bm-matchup-hint">
-                  Have your opponent share their army link, or paste the contents of a <code>.md</code> / <code>.thjson</code> roster file.
+                  {t('battle.pasteHint')} <code>.md</code> / <code>.thjson</code> roster file.
                 </p>
                 <textarea
                   className="bm-matchup-textarea"
-                  placeholder="Paste share link or roster data here…"
+                  placeholder={t('battle.pastePlaceholder')}
                   value={matchupPaste}
                   onChange={e => { setMatchupPaste(e.target.value); setMatchupError(''); }}
                   rows={4}
                 />
                 {matchupError && <div className="bm-matchup-error">{matchupError}</div>}
                 <button className="bm-matchup-load-btn" disabled={!matchupPaste.trim()} onClick={handleLoadOpponentPaste}>
-                  ⚔ Load Opponent
+                  {t('battle.loadOpponentBtn')}
                 </button>
               </div>
             )}
             {matchupTab === 'library' && (
               <div className="bm-matchup-library">
                 {savedWarbands.length === 0 ? (
-                  <p className="bm-matchup-hint">No saved warbands. Save an army first, or use Paste.</p>
+                  <p className="bm-matchup-hint">{t('battle.noSaved')}</p>
                 ) : (
                   <ul className="bm-matchup-lib-list">
                     {savedWarbands.map(wb => {
@@ -895,7 +900,7 @@ export function BattleMode({
                         <li key={wb.id} className="bm-matchup-lib-item" onClick={() => handleLoadOpponentLibrary(wb.id)}>
                           <span className="bm-matchup-lib-name">{wb.name}</span>
                           <span className="bm-matchup-lib-faction">{fn}{wb.subfactionName ? ` — ${wb.subfactionName}` : ''}</span>
-                          <span className="bm-matchup-lib-stats">{cr} Cr · {mdl} models</span>
+                          <span className="bm-matchup-lib-stats">{cr} Cr · {mdl} {t('builder.modelCount')}</span>
                         </li>
                       );
                     })}
@@ -913,8 +918,8 @@ export function BattleMode({
               className={`bm-army-tab ${matchupViewTab === 'mine' ? 'bm-army-tab--active bm-army-tab--mine' : ''}`}
               onClick={() => setMatchupViewTab('mine')}
             >
-              <span className="bm-army-tab-label">⚔ Your Army</span>
-              <span className="bm-army-tab-stats">{livePoints} Cr · {liveModels} Models</span>
+              <span className="bm-army-tab-label">{t('battle.yourArmy')}</span>
+              <span className="bm-army-tab-stats">{livePoints} Cr · {liveModels} {t('builder.models')}</span>
             </button>
             <button
               className={`bm-army-tab ${matchupViewTab === 'opponent' ? 'bm-army-tab--active bm-army-tab--opponent' : ''}`}
@@ -926,7 +931,7 @@ export function BattleMode({
               <span className="bm-army-tab-stats">
                 {opponentPoints} Cr
                 {opponentGlory > 0 && <> · {opponentGlory} Gl</>}
-                {' '}· {opponentModels} Models
+                {' '}· {opponentModels} {t('builder.models')}
               </span>
             </button>
           </div>
@@ -957,7 +962,7 @@ export function BattleMode({
             {/* Mercenary Cards */}
             {warband.mercenaries.length > 0 && (
               <section className="bm-mercenaries">
-                <h2 className="bm-section-header">Mercenaries</h2>
+                <h2 className="bm-section-header">{t('battle.mercenaries')}</h2>
                 {warband.mercenaries.map(wm => (
                   <MercenaryCard key={wm.mercenaryId} wm={wm} />
                 ))}
@@ -993,7 +998,7 @@ export function BattleMode({
 
             {(opponent.mercenaries?.length ?? 0) > 0 && (
               <section className="bm-mercenaries">
-                <h2 className="bm-section-header">Mercenaries</h2>
+                <h2 className="bm-section-header">{t('battle.mercenaries')}</h2>
                 {opponent.mercenaries.map(wm => (
                   <MercenaryCard key={wm.mercenaryId} wm={wm} />
                 ))}
@@ -1045,7 +1050,7 @@ export function BattleMode({
           glossary.sort((a, b) => a.keyword.localeCompare(b.keyword));
           return (
             <section className="bm-keyword-glossary bm-print-only">
-              <h2 className="bm-section-header">Keyword Reference</h2>
+              <h2 className="bm-section-header">{t('battle.keywordReference')}</h2>
               <dl className="bm-glossary-list">
                 {glossary.map(({ keyword, description }) => (
                   <div key={keyword} className="bm-glossary-entry">

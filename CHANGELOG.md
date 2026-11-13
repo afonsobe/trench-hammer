@@ -4,6 +4,16 @@ All notable changes to the Trench Hammer Army Builder application are documented
 
 ---
 
+## [2.0.3] - 2026-11-13
+
+### Added
+- **Phase 2 i18n**: translated `WargearPanel`, `UnitInfoModal`, `CampaignManager` and `BattleMode` UI chrome, plus warband-level validation messages and localized export dates, in both `en` and `pt-BR`.
+
+### Changed
+- Validation messages now resolve through `i18n.t` (utils-level), keeping fallback to English for any untranslated token.
+
+---
+
 ## [2.0.2] - 2026-11-13
 
 ### Added

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { KeywordList } from './KeywordChip.js';
 import { Weapon, WeaponReplacementRule } from '../types/index.js';
 import {
@@ -124,6 +125,7 @@ export function WargearPanel({
   perModelWargearLimits,
   factionNotes = {},
 }: WargearPanelProps) {
+  const { t } = useTranslation();
   const [openCategory, setOpenCategory] = useState<string | null>(null);
   const [openCampaignCategory, setOpenCampaignCategory] = useState<string | null>(null);
   const [infoItem, setInfoItem] = useState<{ item: Weapon | WargearOption; catType: 'weapon' | 'armor' | 'equipment' } | null>(null);
@@ -435,9 +437,9 @@ export function WargearPanel({
       <div className="wargear-panel">
         <div className="wargear-header">
           <div>
-            <h2>Wargear — {unitName}</h2>
+            <h2>{t('wargear.title', { name: unitName })}</h2>
             <p className="wargear-subtitle">
-              {unitCount} model{unitCount !== 1 ? 's' : ''} · Wargear total: <strong>{wargearSummary}</strong>
+              {t('wargear.model', { count: unitCount })} · {t('wargear.total')} <strong>{wargearSummary}</strong>
             </p>
           </div>
           <button className="btn-close" onClick={onClose}>✕</button>
@@ -449,14 +451,14 @@ export function WargearPanel({
         {cannotEquip && (
           <div className="wg-cannot-equip-notice">
             <span className="wg-cannot-equip-icon">🔒</span>
-            <span>This unit cannot be equipped with any additional weapons, armour, or equipment.</span>
+            <span>{t('wargear.cannotEquip')}</span>
           </div>
         )}
 
         {/* ── Included (default) wargear ─────────────────────────── */}
         {displayDefaultItems.filter(item => !isDefaultReplaced(item)).length > 0 && (
           <div className="wargear-included">
-            <h3>Included Equipment</h3>
+            <h3>{t('wargear.includedEquipment')}</h3>
             <div className="wargear-selected-list">
               {displayDefaultItems.filter(item => !isDefaultReplaced(item)).map(item => {
                 const rawItem = rawDefaultWargear.find(r => r.id === item.id);
@@ -467,11 +469,11 @@ export function WargearPanel({
                     {rawItem && (
                       <button
                         className="btn-wg-info"
-                        title={`View ${item.name} details`}
+                        title={t('wargear.viewDetails', { name: item.name })}
                         onClick={() => setInfoItem({ item: rawItem, catType: rawItem.type as 'weapon' | 'armor' | 'equipment' })}
                       >👁</button>
                     )}
-                    <span className="wg-included-label">Included</span>
+                    <span className="wg-included-label">{t('wargear.included')}</span>
                   </div>
                 );
               })}
@@ -483,32 +485,32 @@ export function WargearPanel({
         {!cannotEquip && <div className="wg-slot-bar">
           <div className={`wg-slot-pill ${usage.rangedHandsUsed >= usage.maxRangedHands ? 'slot-full' : ''}`}
                title={usage.heldRangedPenalty > 0 ? `${usage.heldRangedPenalty} hand(s) blocked by HELD melee weapon(s)` : undefined}>
-            🎯 Ranged {usage.rangedHandsUsed}/{usage.maxRangedHands}{usage.heldRangedPenalty > 0 ? ` (${usage.heldRangedPenalty} held)` : ''}
+            🎯 {t('wargear.ranged')} {usage.rangedHandsUsed}/{usage.maxRangedHands}{usage.heldRangedPenalty > 0 ? ` (${usage.heldRangedPenalty} ${t('wargear.held')})` : ''}
           </div>
           <div className={`wg-slot-pill ${usage.meleeHandsUsed >= usage.maxMeleeHands ? 'slot-full' : ''}`}
                title={usage.heldMeleePenalty > 0 ? `${usage.heldMeleePenalty} hand(s) blocked by HELD ranged weapon(s)` : undefined}>
-            ⚔ Melee {usage.meleeHandsUsed}/{usage.maxMeleeHands}{usage.heldMeleePenalty > 0 ? ` (${usage.heldMeleePenalty} held)` : ''}
+            ⚔ {t('wargear.melee')} {usage.meleeHandsUsed}/{usage.maxMeleeHands}{usage.heldMeleePenalty > 0 ? ` (${usage.heldMeleePenalty} ${t('wargear.held')})` : ''}
           </div>
           <div className={`wg-slot-pill ${usage.hasShield ? 'slot-used' : ''} ${usage.hasTwoHandedRanged ? 'slot-blocked' : ''}`}>
-            🛡 Shield {usage.hasShield ? '✓' : usage.hasTwoHandedRanged ? '✗' : '○'}
+            🛡 {t('wargear.shield')} {usage.hasShield ? '✓' : usage.hasTwoHandedRanged ? '✗' : '○'}
           </div>
           <div className={`wg-slot-pill ${usage.hasBodyArmour ? 'slot-used' : ''}`}>
-            🥋 Armour {usage.hasBodyArmour ? '✓' : '○'}
+            🥋 {t('wargear.armour')} {usage.hasBodyArmour ? '✓' : '○'}
           </div>
           <div className={`wg-slot-pill ${usage.headgearCount > 0 ? 'slot-used' : ''}`}>
-            🪖 Headgear {usage.headgearCount}/1
+            🪖 {t('wargear.headgear')} {usage.headgearCount}/1
           </div>
           <div className={`wg-slot-pill ${usage.hasThrownWeapon ? 'slot-used' : ''}`}>
-            💣 Grenade {usage.hasThrownWeapon ? '✓' : '○'}/1
+            💣 {t('wargear.grenade')} {usage.hasThrownWeapon ? '✓' : '○'}/1
           </div>
           <div className={`wg-slot-pill ${usage.hasMainHandWeapon ? 'slot-used' : ''}`}>
-            ✊ Main Hand {usage.hasMainHandWeapon ? '✓' : '○'}/1
+            ✊ {t('wargear.mainHandFull')} {usage.hasMainHandWeapon ? '✓' : '○'}/1
           </div>
         </div>}
 
         {displaySelectedItems.length > 0 && (
           <div className="wargear-selected">
-            <h3>Selected Wargear</h3>
+            <h3>{t('wargear.selectedWargear')}</h3>
             <div className="wargear-selected-list">
               {displaySelectedItems.map(item => {
                 const rawItem = lookupWeapon(item.id) ?? lookupWargear(item.id);
@@ -517,17 +519,17 @@ export function WargearPanel({
                   {item.isDefault && <span className="wg-default-lock">🔒</span>}
                   <span className="wg-name">{item.name}</span>
                   {getMissingCombiModeWarning(item) && (
-                    <span className="wg-combi-warning">⚠ Legacy mode missing</span>
+                    <span className="wg-combi-warning">{t('wargear.legacyModeMissing')}</span>
                   )}
                   {rawItem && (
                     <button
                       className="btn-wg-info"
-                      title={`View ${item.name} details`}
+                      title={t('wargear.viewDetails', { name: item.name })}
                       onClick={() => setInfoItem({ item: rawItem, catType: item.type })}
                     >👁</button>
                   )}
                   {item.isDefault ? (
-                    <span className="wg-included-label">Auto-Applied</span>
+                    <span className="wg-included-label">{t('wargear.autoApplied')}</span>
                   ) : (
                     <>
                       <span className="wg-qty">×{item.quantity}</span>
@@ -568,12 +570,12 @@ export function WargearPanel({
             <input
               type="text"
               className="wg-search-input"
-              placeholder="Search by name or keyword…"
+              placeholder={t('wargear.searchPlaceholder')}
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
             />
             {searchQuery && (
-              <button className="wg-search-clear" title="Clear search" onClick={() => setSearchQuery('')}>✕</button>
+              <button className="wg-search-clear" title={t('wargear.clearSearch')} onClick={() => setSearchQuery('')}>✕</button>
             )}
           </div>
         )}
@@ -607,13 +609,13 @@ export function WargearPanel({
                       >
                         {/* Variant ribbon — top-right corner banner for faction-specific items */}
                         {factionSpecificIds.has(item.id) && (
-                          <div className="wg-variant-ribbon">VARIANT</div>
+                          <div className="wg-variant-ribbon">{t('wargear.variant')}</div>
                         )}
                         <div className="wg-item-header">
                           <span className="wg-item-name">{item.name}</span>
                           <button
                             className="btn-wg-info"
-                            title={`View ${item.name} details`}
+                            title={t('wargear.viewDetails', { name: item.name })}
                             onClick={e => { e.stopPropagation(); setInfoItem({ item, catType: cat.type }); }}
                           >👁</button>
                         </div>
@@ -645,7 +647,7 @@ export function WargearPanel({
                         )}
                         <div className="wg-item-footer">
                           <span className="wg-item-cost">
-                            {getEffectiveCost(item)} {getEffectiveCostCurrency(item) === 'glory' ? 'Glory' : 'Credits'}
+                            {getEffectiveCost(item)} {getEffectiveCostCurrency(item) === 'glory' ? t('builder.glory') : t('builder.credits')}
                           </span>
                           {existing ? (
                             <div className="wg-item-controls">
@@ -673,7 +675,7 @@ export function WargearPanel({
                               disabled={isBlocked}
                               onClick={() => !isBlocked && handleAddItem(item, cat.type)}
                             >
-                              Add
+                              {t('wargear.add')}
                             </button>
                           )}
                         </div>
@@ -690,8 +692,8 @@ export function WargearPanel({
         {!cannotEquip && CAMPAIGN_CATEGORIES_VISIBLE.length > 0 && (
           <div className="campaign-shop-section">
             <div className="campaign-shop-header">
-              <span className="campaign-shop-title">⚔ Campaign Shop</span>
-              <span className="campaign-shop-subtitle">Purchased with Glory</span>
+              <span className="campaign-shop-title">{t('wargear.campaignShop')}</span>
+              <span className="campaign-shop-subtitle">{t('wargear.purchasedGlory')}</span>
             </div>
             <div className="wargear-categories">
               {CAMPAIGN_CATEGORIES_VISIBLE.map(cat => {
@@ -719,13 +721,13 @@ export function WargearPanel({
                             title={isBlocked ? blockReason ?? undefined : undefined}
                           >
                             {factionSpecificIds.has(item.id) && (
-                              <div className="wg-variant-ribbon">VARIANT</div>
+                              <div className="wg-variant-ribbon">{t('wargear.variant')}</div>
                             )}
                             <div className="wg-item-header">
                               <span className="wg-item-name">{item.name}</span>
                               <button
                                 className="btn-wg-info"
-                                title={`View ${item.name} details`}
+                                title={t('wargear.viewDetails', { name: item.name })}
                                 onClick={e => { e.stopPropagation(); setInfoItem({ item, catType: cat.type }); }}
                               >👁</button>
                             </div>
@@ -756,7 +758,7 @@ export function WargearPanel({
                             )}
                             <div className="wg-item-footer">
                               <span className="wg-item-cost">
-                                {getEffectiveCost(item)} {getEffectiveCostCurrency(item) === 'glory' ? 'Glory' : 'Credits'}
+                                {getEffectiveCost(item)} {getEffectiveCostCurrency(item) === 'glory' ? t('builder.glory') : t('builder.credits')}
                               </span>
                               {existing ? (
                                 <div className="wg-item-controls">
@@ -784,7 +786,7 @@ export function WargearPanel({
                                   disabled={isBlocked}
                                   onClick={() => !isBlocked && handleAddItem(item, cat.type)}
                                 >
-                                  Add
+                                  {t('wargear.add')}
                                 </button>
                               )}
                             </div>
@@ -815,13 +817,12 @@ export function WargearPanel({
     {pendingCombiSelection && (
       <div className="wg-combi-modal-backdrop" onClick={() => setPendingCombiSelection(null)}>
         <div className="wg-combi-modal" onClick={(e) => e.stopPropagation()}>
-          <h3>Choose {pendingCombiSelection.name} second mode</h3>
+          <h3>{t('wargear.chooseSecondModeTitle', { name: pendingCombiSelection.name })}</h3>
           <p className="wg-combi-modal-subtitle">
-            Select a mode to add its base cost. Final totals are shown after selection.
+            {t('wargear.selectModeHint')}
           </p>
           <div className="wg-combi-options">
             {pendingCombiSelection.options.map(option => {
-              const addCurrency = option.costCurrency === 'glory' ? 'Glory' : 'Credits';
               return (
                 <button
                   key={option.id}
@@ -829,13 +830,13 @@ export function WargearPanel({
                   onClick={() => handleConfirmCombiMode(option)}
                 >
                   <span>{option.name}</span>
-                  <span>+{option.cost} {addCurrency}</span>
+                  <span>+{option.cost} {option.costCurrency === 'glory' ? t('builder.glory') : t('builder.credits')}</span>
                 </button>
               );
             })}
           </div>
           <button className="wg-combi-cancel" onClick={() => setPendingCombiSelection(null)}>
-            Cancel
+            {t('wargear.cancel')}
           </button>
         </div>
       </div>
