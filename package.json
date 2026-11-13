@@ -3,7 +3,7 @@
   "version": "1.2.0",
   "description": "Army builder for the Trench Hammer wargame - combining Trench Crusade mechanics with Warhammer 40K universe",
   "type": "module",
-  "homepage": "https://vazsago-art.github.io/trench-hammer",
+  "homepage": "https://afonsobe.github.io/trench-hammer",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
