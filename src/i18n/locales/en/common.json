@@ -1,0 +1,41 @@
+{
+  "meta": {
+    "title": "Trench Hammer - Army Builder",
+    "description": "Build and manage warbands for the Trench Hammer wargame"
+  },
+  "app": {
+    "name": "Trench Hammer - Army Builder",
+    "tagline": "Build and validate your warbands"
+  },
+  "nav": {
+    "build": "Build",
+    "army": "Army",
+    "validate": "Validate",
+    "tools": "Tools"
+  },
+  "topbar": {
+    "models_one": "{{count}} model",
+    "models_other": "{{count}} models"
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "ptBR": "Português (Brasil)"
+  },
+  "about": {
+    "title": "About",
+    "app": "App",
+    "appName": "Trench Hammer Army Builder",
+    "author": "Author",
+    "authorValue": "Vazsago",
+    "poweredBy": "Powered by",
+    "poweredByValue": "GitHub Copilot (Claude Sonnet)",
+    "version": "Version",
+    "ruleset": "Ruleset",
+    "rulesetValue": "Trench Hammer 1.4.2",
+    "rulesBy": "Rules by",
+    "rulesByValue": "Goober",
+    "lastUpdated": "Last Updated",
+    "lastUpdatedDate": "2026-11-13"
+  }
+}

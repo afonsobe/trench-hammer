@@ -4,6 +4,18 @@ All notable changes to the Trench Hammer Army Builder application are documented
 
 ---
 
+## [2.0.1] - 2026-11-13
+
+### Added
+- **Internationalization (i18n)**: added `react-i18next` with an English reference catalog and a `pt-BR` translation. A segmented **EN | PT** switcher is available in the desktop header, the desktop About panel and the mobile About card.
+- Language choice is persisted in `localStorage` (`th.lang`), detected from the browser on first visit, and applied to `<html lang>`, the document title, the meta description and the About date format.
+- `npm run i18n:check` verifies that every locale mirrors the English key set.
+
+### Changed
+- Phase 0 scope translated: header, About panels, mobile tab labels and the mobile model counter. Game data (units, weapons, lore, rules) stays in English on purpose.
+
+---
+
 ## [2.0.0] - 2026-11-13
 
 ### Changed

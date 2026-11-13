@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from '../LanguageSwitcher.js';
+import { formatDate } from '../../i18n/format.js';
 import { Warband, WarbandUnit, UnitOption, UnitSubType, SelectedWargear, WargearOption, SelectedPsychicPower, SelectedGiftOfChaos, UnitUpgrade, WarbandMercenary, Mercenary, MercenaryStats, SharedWarbandProps } from '../../types/index.js';
 import { getFactionById, allFactions } from '../../data/factions_complete.js';
 import { marksOfChaos } from '../../data/equipment.js';
@@ -82,6 +85,8 @@ export function MobileApp({
   gloryLimit, setGloryLimit,
   warband, setWarband,
 }: SharedWarbandProps) {
+
+  const { t, i18n } = useTranslation();
 
   const currentFaction = getFactionById(selectedFaction);
   const currentSubFaction = getSubFactionById(selectedFaction, selectedSubFaction);
@@ -822,7 +827,7 @@ export function MobileApp({
             </span>
           )}
           {totalModels > 0 && (
-            <span className="mapp-model-badge">{totalModels} models</span>
+            <span className="mapp-model-badge">{t('topbar.models', { count: totalModels })}</span>
           )}
         </div>
       </header>
@@ -1698,37 +1703,41 @@ export function MobileApp({
             </div>
 
             <div className="mcard mcard-about">
-              <div className="mcard-title">About</div>
+              <div className="mcard-title">{t('about.title')}</div>
               <div className="mabout-grid">
                 <div className="mabout-row">
-                  <span className="mabout-label">App</span>
-                  <span className="mabout-value">Trench Hammer Army Builder</span>
+                  <span className="mabout-label">{t('about.app')}</span>
+                  <span className="mabout-value">{t('about.appName')}</span>
                 </div>
                 <div className="mabout-row">
-                  <span className="mabout-label">Author</span>
-                  <span className="mabout-value">{__APP_AUTHOR__}</span>
+                  <span className="mabout-label">{t('about.author')}</span>
+                  <span className="mabout-value">{t('about.authorValue')}</span>
                 </div>
                 <div className="mabout-row">
-                  <span className="mabout-label">Powered by</span>
-                  <span className="mabout-value">GitHub Copilot (Claude Sonnet)</span>
+                  <span className="mabout-label">{t('about.poweredBy')}</span>
+                  <span className="mabout-value">{t('about.poweredByValue')}</span>
                 </div>
                 <div className="mabout-row">
-                  <span className="mabout-label">Version</span>
+                  <span className="mabout-label">{t('about.version')}</span>
                   <span className="mabout-value">
                     <span className="mversion-badge">v{__APP_VERSION__}</span>
                   </span>
                 </div>
                 <div className="mabout-row">
-                  <span className="mabout-label">Ruleset</span>
-                  <span className="mabout-value">Trench Hammer 1.4.2</span>
+                  <span className="mabout-label">{t('about.ruleset')}</span>
+                  <span className="mabout-value">{t('about.rulesetValue')}</span>
                 </div>
                 <div className="mabout-row">
-                  <span className="mabout-label">Rules by</span>
-                  <span className="mabout-value">Goober</span>
+                  <span className="mabout-label">{t('about.rulesBy')}</span>
+                  <span className="mabout-value">{t('about.rulesByValue')}</span>
                 </div>
                 <div className="mabout-row">
-                  <span className="mabout-label">Last Updated</span>
-                  <span className="mabout-value">November 13, 2026</span>
+                  <span className="mabout-label">{t('about.lastUpdated')}</span>
+                  <span className="mabout-value">{formatDate(t('about.lastUpdatedDate'), i18n.language)}</span>
+                </div>
+                <div className="mabout-row">
+                  <span className="mabout-label">{t('language.label')}</span>
+                  <span className="mabout-value"><LanguageSwitcher /></span>
                 </div>
               </div>
             </div>
@@ -1743,28 +1752,28 @@ export function MobileApp({
           onClick={() => setActiveTab('build')}
         >
           <span className="mtab-icon">🔧</span>
-          <span className="mtab-label">Build</span>
+          <span className="mtab-label">{t('nav.build')}</span>
         </button>
         <button
           className={`mtab ${activeTab === 'army' ? 'active' : ''}`}
           onClick={() => setActiveTab('army')}
         >
           <span className="mtab-icon">⚔</span>
-          <span className="mtab-label">Army{warband.units.length > 0 ? ` (${warband.units.length})` : ''}</span>
+          <span className="mtab-label">{t('nav.army')}{warband.units.length > 0 ? ` (${warband.units.length})` : ''}</span>
         </button>
         <button
           className={`mtab ${activeTab === 'validate' ? 'active' : ''} ${validErrors > 0 ? 'has-issues' : ''}`}
           onClick={() => setActiveTab('validate')}
         >
           <span className="mtab-icon">{validErrors > 0 ? '⚠' : '✓'}</span>
-          <span className="mtab-label">Validate</span>
+          <span className="mtab-label">{t('nav.validate')}</span>
         </button>
         <button
           className={`mtab ${activeTab === 'export' ? 'active' : ''}`}
           onClick={() => setActiveTab('export')}
         >
           <span className="mtab-icon">📤</span>
-          <span className="mtab-label">Tools</span>
+          <span className="mtab-label">{t('nav.tools')}</span>
         </button>
       </nav>
 

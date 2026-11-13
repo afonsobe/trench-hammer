@@ -6,6 +6,7 @@ combining Trench Crusade core mechanics with Warhammer 40K lore/factions. Built 
 
 ### Tech Stack
 - **Framework**: React 18 + TypeScript + Vite (PWA)
+- **i18n**: `react-i18next`; catalogs in `src/i18n/locales/<locale>/*.json` (`en` is the reference, `pt-BR` the additional locale); validate with `npm run i18n:check`
 - **Root**: repo root
 - **Build**: `npm run build` → `tsc && vite build`
 - **Dev server**: `npm run dev` → http://localhost:5173/trench-hammer/ (HMR enabled)
@@ -13,8 +14,8 @@ combining Trench Crusade core mechanics with Warhammer 40K lore/factions. Built 
 - **⚠ DEPLOY RULE**: changes only reach the live site after `git commit` + `git push origin master`. There is no manual deploy step; the legacy `gh-pages` branch is unused (do not run `gh-pages`).
 
 ### Current Version
-- **App version**: Trench Hammer **2.0.0** / date: **November 13, 2026** (source of truth: `version` in `package.json`, injected as `__APP_VERSION__`)
-- **Versioning rule**: bump the patch by `0.0.1` for each release (2.0.1, 2.0.2, ...)
+- **App version**: Trench Hammer **2.0.1** / date: **November 13, 2026** (source of truth: `version` in `package.json`, injected as `__APP_VERSION__`)
+- **Versioning rule**: bump the patch by `0.0.1` for each release (2.0.2, 2.0.3, ...)
 - **Service worker cache**: `trench-hammer-v53` (in `public/sw.js`)
 - **Version string locations**: `src/components/ArmyBuilder.tsx` and `src/components/mobile/MobileApp.tsx` (both render `__APP_VERSION__`)
 
@@ -41,18 +42,25 @@ combining Trench Crusade core mechanics with Warhammer 40K lore/factions. Built 
 | `src/utils/battleReportExport.ts` | Exports BattleReport to formatted .txt |
 | `src/utils/export.ts` | Warband save/load, JSON/text export |
 | `src/utils/shareUrl.ts` | Share link encode/decode |
-| `public/sw.js` | Service worker (bump version string on every deploy) |
+| `src/i18n/index.ts` | i18n init, language detection and persistence |
+| `src/i18n/locales/` | Translation catalogs (`en` is the reference, `pt-BR` the extra locale) |
+| `src/components/LanguageSwitcher.tsx` | EN/PT language toggle |
+| `public/sw.js` | Service worker (network-first; no cache bump needed per deploy) |
 
 ### Mobile vs Desktop
 - `window.innerWidth ≤ 900px` → renders `MobileApp.tsx` + `MobileApp.css`
 - `> 900px` → renders `ArmyBuilder.tsx` + `ArmyBuilder.css`
 - Both components must be kept in sync for any UI feature added
 
-### App Version String Convention
-When bumping the version, update ALL of these:
-1. `src/components/ArmyBuilder.tsx` — version string in JSX
-2. `src/components/mobile/MobileApp.tsx` — version string + date in JSX
-3. `public/sw.js` — `const CACHE_NAME = 'trench-hammer-vNN'` (increment NN)
+### App Version Convention
+`version` in `package.json` is the single source of truth: it is injected at build time as `__APP_VERSION__` and rendered by both `ArmyBuilder.tsx` and `MobileApp.tsx`. Bump it by `0.0.1` per release and add a `CHANGELOG.md` entry. The service worker (`trench-hammer-v53`) is network-first, so its cache name only needs changing if the caching strategy changes.
+
+### Localization (i18n)
+- All user-facing UI text goes through `t('common.key')` from `react-i18next`; do not hardcode new strings in components.
+- `src/i18n/locales/en/*.json` is the reference catalog; every other locale must mirror its keys (`npm run i18n:check`).
+- Locale codes are BCP 47 (`pt-BR`); the choice is persisted in `localStorage` under `th.lang`.
+- **Never translate data keys, ids or keywords** (`VEHICLE`, `INFANTRY`, …): validation, quick build and exports depend on the English tokens. Only display labels are translated.
+- Game data (units, weapons, lore, rules) is intentionally English-only for now.
 
 ### Implemented Features (as of v50)
 - [x] Faction selection (25+ factions, 100+ subfactions)

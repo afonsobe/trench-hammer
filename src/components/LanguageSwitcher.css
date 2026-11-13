@@ -1,0 +1,45 @@
+.lang-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+.lang-switcher-btn {
+  border: 0;
+  background: transparent;
+  color: #cfd8dc;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  padding: 5px 9px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.lang-switcher-btn:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.lang-switcher-btn.active {
+  background: #00b4db;
+  color: #08252c;
+}
+
+.lang-switcher-btn:focus-visible {
+  outline: 2px solid #00b4db;
+  outline-offset: 1px;
+}
+
+/* Mobile About card: keep the control compact and right-aligned */
+.mabout-value .lang-switcher {
+  padding: 1px;
+}

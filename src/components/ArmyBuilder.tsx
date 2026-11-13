@@ -1,4 +1,7 @@
 import { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from './LanguageSwitcher.js';
+import { formatDate } from '../i18n/format.js';
 import { Warband, UnitOption, UnitSubType, SelectedWargear, WargearOption, SelectedPsychicPower, SelectedGiftOfChaos, UnitUpgrade, WarbandMercenary, Mercenary, WarbandUnit, MercenaryStats, SharedWarbandProps } from '../types/index.js';
 import { getFactionById, allFactions } from '../data/factions_complete.js';
 import { calculateWarbandPoints, calculateWarbandGlory, calculateTotalModels, validateWarband, getUnitMaxCountForWarband } from '../data/validation.js';
@@ -75,6 +78,8 @@ export function ArmyBuilder({
   gloryLimit, setGloryLimit,
   warband, setWarband,
 }: SharedWarbandProps) {
+
+  const { t, i18n } = useTranslation();
 
   const currentFaction = getFactionById(selectedFaction);
   const currentSubFaction = getSubFactionById(selectedFaction, selectedSubFaction);
@@ -794,9 +799,10 @@ export function ArmyBuilder({
       <header className="builder-header">
         <div className="builder-header-row">
           <div>
-            <h1>Trench Hammer - Army Builder</h1>
-            <p>Build and validate your warbands</p>
+            <h1>{t('app.name')}</h1>
+            <p>{t('app.tagline')}</p>
           </div>
+          <LanguageSwitcher />
         </div>
       </header>
 
@@ -1156,24 +1162,26 @@ export function ArmyBuilder({
 
           {/* ── About panel ──────────────────────────────────────────── */}
           <div className="builder-about">
-            <h3>About</h3>
+            <h3>{t('about.title')}</h3>
             <div className="builder-about-grid">
-              <span className="builder-about-label">App</span>
-              <span className="builder-about-value">Trench Hammer Army Builder</span>
-              <span className="builder-about-label">Version</span>
+              <span className="builder-about-label">{t('about.app')}</span>
+              <span className="builder-about-value">{t('about.appName')}</span>
+              <span className="builder-about-label">{t('about.version')}</span>
               <span className="builder-about-value">
                 <span className="builder-version-badge">v{__APP_VERSION__}</span>
               </span>
-              <span className="builder-about-label">Ruleset</span>
-              <span className="builder-about-value">Trench Hammer 1.4.2</span>
-              <span className="builder-about-label">Rules by</span>
-              <span className="builder-about-value">Goober</span>
-              <span className="builder-about-label">Author</span>
-              <span className="builder-about-value">{__APP_AUTHOR__}</span>
-              <span className="builder-about-label">Powered by</span>
-              <span className="builder-about-value">GitHub Copilot (Claude Sonnet)</span>
-              <span className="builder-about-label">Last Updated</span>
-              <span className="builder-about-value">November 13, 2026</span>
+              <span className="builder-about-label">{t('about.ruleset')}</span>
+              <span className="builder-about-value">{t('about.rulesetValue')}</span>
+              <span className="builder-about-label">{t('about.rulesBy')}</span>
+              <span className="builder-about-value">{t('about.rulesByValue')}</span>
+              <span className="builder-about-label">{t('about.author')}</span>
+              <span className="builder-about-value">{t('about.authorValue')}</span>
+              <span className="builder-about-label">{t('about.poweredBy')}</span>
+              <span className="builder-about-value">{t('about.poweredByValue')}</span>
+              <span className="builder-about-label">{t('about.lastUpdated')}</span>
+              <span className="builder-about-value">{formatDate(t('about.lastUpdatedDate'), i18n.language)}</span>
+              <span className="builder-about-label">{t('language.label')}</span>
+              <span className="builder-about-value"><LanguageSwitcher /></span>
             </div>
           </div>
         </aside>
