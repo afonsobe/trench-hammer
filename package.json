@@ -1,6 +1,6 @@
 {
   "name": "trench-hammer-army-builder",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "Army builder for the Trench Hammer wargame - combining Trench Crusade mechanics with Warhammer 40K universe",
   "type": "module",
   "homepage": "https://afonsobe.github.io/trench-hammer",
@@ -8,8 +8,6 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist",
     "typecheck": "tsc --noEmit",
     "qa:scan": "node scripts/qa_scan.mjs"
   },
@@ -27,7 +25,6 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.4",
-    "gh-pages": "^6.3.0",
     "puppeteer": "^24.42.0",
     "typescript": "^5.9.3",
     "vite": "^7.3.1"

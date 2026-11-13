@@ -1173,7 +1173,7 @@ export function ArmyBuilder({
               <span className="builder-about-label">Powered by</span>
               <span className="builder-about-value">GitHub Copilot (Claude Sonnet)</span>
               <span className="builder-about-label">Last Updated</span>
-              <span className="builder-about-value">May 24, 2026</span>
+              <span className="builder-about-value">November 13, 2026</span>
             </div>
           </div>
         </aside>

@@ -4,6 +4,18 @@ All notable changes to the Trench Hammer Army Builder application are documented
 
 ---
 
+## [2.0.0] - 2026-11-13
+
+### Changed
+- **Deploy**: Removed the legacy `gh-pages` deploy path (`predeploy`/`deploy` scripts and the `gh-pages` devDependency). Publishing now relies exclusively on the GitHub Actions workflow (`.github/workflows/deploy.yml`), triggered by pushes to `master`.
+- **Docs**: Updated `.github/copilot-instructions.md` deploy rules, dev server URL, root path and current version.
+- **About**: Refreshed the "Last Updated" date to November 13, 2026 in both the desktop and mobile About panels.
+
+### Notes
+- Versioning continues from `2.0.0`; each following release increments the patch by `0.0.1` (2.0.1, 2.0.2, ...).
+
+---
+
 ## [1.4.3] - 2026-07-02
 
 ### Changed

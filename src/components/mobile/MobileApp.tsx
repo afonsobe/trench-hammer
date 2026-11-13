@@ -1728,7 +1728,7 @@ export function MobileApp({
                 </div>
                 <div className="mabout-row">
                   <span className="mabout-label">Last Updated</span>
-                  <span className="mabout-value">June 7, 2026</span>
+                  <span className="mabout-value">November 13, 2026</span>
                 </div>
               </div>
             </div>

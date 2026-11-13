@@ -6,16 +6,17 @@ combining Trench Crusade core mechanics with Warhammer 40K lore/factions. Built 
 
 ### Tech Stack
 - **Framework**: React 18 + TypeScript + Vite (PWA)
-- **Root**: `d:\Development\TrenchHammer\WebApplication`
+- **Root**: repo root
 - **Build**: `npm run build` → `tsc && vite build`
-- **Dev server**: `npm run dev` → http://localhost:5173 (HMR enabled)
-- **Deploy**: `npm run deploy` → `gh-pages -d dist` (pushes `dist/` to `gh-pages` branch only)
-- **⚠ DEPLOY RULE**: NEVER run `git push` / `git commit` on source code. The git repo is used ONLY for GitHub Pages deployment via `npm run deploy`.
+- **Dev server**: `npm run dev` → http://localhost:5173/trench-hammer/ (HMR enabled)
+- **Deploy**: automatic via GitHub Actions (`.github/workflows/deploy.yml`) on every push to `master` → builds and publishes `dist/` to GitHub Pages at https://afonsobe.github.io/trench-hammer/
+- **⚠ DEPLOY RULE**: changes only reach the live site after `git commit` + `git push origin master`. There is no manual deploy step; the legacy `gh-pages` branch is unused (do not run `gh-pages`).
 
 ### Current Version
-- **App version**: Trench Hammer **1.4.0** / date: **June 7, 2026**
+- **App version**: Trench Hammer **2.0.0** / date: **November 13, 2026** (source of truth: `version` in `package.json`, injected as `__APP_VERSION__`)
+- **Versioning rule**: bump the patch by `0.0.1` for each release (2.0.1, 2.0.2, ...)
 - **Service worker cache**: `trench-hammer-v53` (in `public/sw.js`)
-- **Version string locations**: `src/components/ArmyBuilder.tsx` and `src/components/mobile/MobileApp.tsx`
+- **Version string locations**: `src/components/ArmyBuilder.tsx` and `src/components/mobile/MobileApp.tsx` (both render `__APP_VERSION__`)
 
 ### Key File Locations
 | Path | Purpose |
