@@ -1,6 +1,6 @@
 {
   "name": "trench-hammer-army-builder",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Army builder for the Trench Hammer wargame - combining Trench Crusade mechanics with Warhammer 40K universe",
   "type": "module",
   "homepage": "https://afonsobe.github.io/trench-hammer",

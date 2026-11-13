@@ -1,0 +1,19 @@
+{
+  "saveLoad": "Save & Load",
+  "exportShare": "Export / Share",
+  "exportShareDesc": "Share your roster with other apps (Google Drive, WhatsApp, email, etc.). The .md file includes all unit data and can be re-imported into the app.",
+  "import": "Import",
+  "importDesc": "Load a warband from a .md roster file or paste the JSON data directly.",
+  "terrain": "Terrain Setup",
+  "terrainDesc": "Auto-generate a balanced terrain layout for your battlefield.",
+  "tactical": "Tactical Analysis",
+  "tacticalDesc": "Analyse your warband — advantages, disadvantages and tactical focus.",
+  "battle": "Battle Mode",
+  "battleDesc": "Full-screen read-only combat reference with all unit stats at a glance.",
+  "shareLink": "Share Link",
+  "shareLinkDesc": "Copies a shareable URL to clipboard — anyone can open it to load your warband.",
+  "rules": "Rules Reference",
+  "rulesDesc": "Searchable rules and keyword glossary for quick look-ups during a game.",
+  "campaign": "Campaign Manager",
+  "campaignDesc": "Track campaign games, exploration, resources and skills."
+}

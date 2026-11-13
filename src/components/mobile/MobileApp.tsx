@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from '../LanguageSwitcher.js';
 import { formatDate } from '../../i18n/format.js';
 import { Warband, WarbandUnit, UnitOption, UnitSubType, SelectedWargear, WargearOption, SelectedPsychicPower, SelectedGiftOfChaos, UnitUpgrade, WarbandMercenary, Mercenary, MercenaryStats, SharedWarbandProps } from '../../types/index.js';
@@ -87,6 +87,7 @@ export function MobileApp({
 }: SharedWarbandProps) {
 
   const { t, i18n } = useTranslation();
+  const { t: tMobile } = useTranslation('mobile');
 
   const currentFaction = getFactionById(selectedFaction);
   const currentSubFaction = getSubFactionById(selectedFaction, selectedSubFaction);
@@ -854,15 +855,15 @@ export function MobileApp({
 
             {/* Warband config card */}
             <div className="mcard">
-              <div className="mcard-title">Warband Setup</div>
-              <label className="mfield-label">Name</label>
+              <div className="mcard-title">{t('builder.warbandSetup')}</div>
+              <label className="mfield-label">{t('builder.name')}</label>
               <input
                 className="mfield-input"
                 type="text"
                 value={warband.name}
                 onChange={e => setWarband(prev => ({ ...prev, name: e.target.value }))}
               />
-              <label className="mfield-label">Faction</label>
+              <label className="mfield-label">{t('builder.faction')}</label>
               <select className="mfield-select" value={selectedFaction} onChange={handleFactionChange}>
                 {allFactions.map(f => (
                   <option key={f.id} value={f.id}>{f.name}</option>
@@ -873,7 +874,7 @@ export function MobileApp({
                   className="mlore-btn"
                   onClick={() => setShowLore(true)}
                 >
-                  📖 Read Lore
+                  📖 {t('builder.readLore')}
                 </button>
               )}
               {(() => {
@@ -926,7 +927,7 @@ export function MobileApp({
                 const activeSF = sfData?.subFactions.find(sf => sf.id === selectedSubFaction);
                 return (
                   <>
-                    <label className="mfield-label">Warband Variant</label>
+                    <label className="mfield-label">{t('builder.warbandVariant')}</label>
                     <select className="mfield-select" value={selectedSubFaction} onChange={handleSubFactionChange}>
                       {sfData?.subFactions.map(sf => (
                         <option key={sf.id} value={sf.id}>{sf.name}</option>
@@ -937,7 +938,7 @@ export function MobileApp({
                         className="mlore-btn"
                         onClick={() => setShowWarbandLore(true)}
                       >
-                        📖 Warband Lore
+                        📖 {t('builder.warbandLore')}
                       </button>
                     )}
                     {activeSF && (selectedSubFaction !== 'no_variant' || (getSubFactions(selectedFaction)?.required ?? false)) && (
@@ -983,13 +984,13 @@ export function MobileApp({
               {/* Patron select */}
               {getPatronsForFaction(selectedFaction, selectedSubFaction).length > 0 && (
                 <>
-                  <label className="mfield-label">Patron</label>
+                  <label className="mfield-label">{t('builder.patron')}</label>
                   <select
                     className="mfield-select"
                     value={warband.patron ?? ''}
                     onChange={e => setWarband(prev => ({ ...prev, patron: e.target.value || undefined }))}
                   >
-                    <option value="">— None selected —</option>
+                    <option value="">{t('builder.noneSelected')}</option>
                     {getPatronsForFaction(selectedFaction, selectedSubFaction).map(p => (
                       <option key={p.id} value={p.id}>{p.name}</option>
                     ))}
@@ -1002,7 +1003,7 @@ export function MobileApp({
                 const visibleAbilities = filterAbilitiesForSubfaction(p.abilities, currentSubFaction?.name);
                 return (
                   <div className="m-patron-info-panel">
-                    <div className="m-patron-info-header">⚜ Patron: {p.name}</div>
+                    <div className="m-patron-info-header">{t('builder.patronLabel', { name: p.name })}</div>
                     <p className="m-patron-info-desc">{p.description}</p>
                     <ul className="m-patron-info-skills">
                       {visibleAbilities.map((a, i) => (
@@ -1017,12 +1018,12 @@ export function MobileApp({
 
               <div className="mfield-row">
                 <div className="mfield-col">
-                  <label className="mfield-label">Credits Limit</label>
+                  <label className="mfield-label">{t('builder.creditsLimit')}</label>
                   <input className="mfield-input" type="number" min="200" max="2000" value={pointLimit} onChange={handlePointLimitChange} />
                 </div>
                 <div className="mfield-col">
-                  <label className="mfield-label">Glory Limit</label>
-                  <input className="mfield-input" type="number" min="0" max="100" value={gloryLimit} onChange={handleGloryLimitChange} placeholder="0 = off" />
+                  <label className="mfield-label">{t('builder.gloryLimit')}</label>
+                  <input className="mfield-input" type="number" min="0" max="100" value={gloryLimit} onChange={handleGloryLimitChange} placeholder={t('builder.gloryPlaceholderShort')} />
                 </div>
               </div>
             </div>
@@ -1033,31 +1034,31 @@ export function MobileApp({
                 className="mbtn mbtn-new mbtn-half"
                 onClick={handleNewBuild}
               >
-                🆕 New Build
+                🆕 {t('actions.newBuild')}
               </button>
               <button
                 className="mbtn mbtn-primary mbtn-half"
                 onClick={() => setUnitBrowserOpen(true)}
               >
-                + Add Units
+                + {t('actions.addUnits')}
               </button>
             </div>
 
             {/* Quick Build card */}
             <div className="mcard">
-              <div className="mcard-title">Quick Build</div>
+              <div className="mcard-title">{t('actions.quickBuild')}</div>
               <p className="mcard-desc">
-                Generate a recommended army list from your credit and glory budget. Great for new players!
+                {t('builder.quickBuildDesc')}
               </p>
               <button className="mbtn mbtn-quickbuild mbtn-full" onClick={() => setShowQuickBuild(true)}>
-                <span className="mbtn-icon">🎲</span> Quick Build
+                <span className="mbtn-icon">🎲</span> {t('actions.quickBuild')}
               </button>
             </div>
 
             {/* Quick unit count summary by faction category */}
             {warband.units.length > 0 && (
               <div className="mcard">
-                <div className="mcard-title">Roster Quick View</div>
+                <div className="mcard-title">{t('builder.rosterQuickView')}</div>
                 {warband.units.map((u, i) => {
                   const effE = u.unitType === 'elite' || !!u.isPromoted || u.keywords.includes('ELITE');
                   return (
@@ -1082,9 +1083,9 @@ export function MobileApp({
             {warband.units.length === 0 ? (
               <div className="mempty">
                 <div className="mempty-icon">⚔</div>
-                <p>No units yet.</p>
+                <p>{t('builder.noUnitsYet')}</p>
                 <button className="mbtn mbtn-primary" onClick={() => setActiveTab('build')}>
-                  Go to Build
+                  {t('actions.goToBuild')}
                 </button>
               </div>
             ) : (
@@ -1111,12 +1112,12 @@ export function MobileApp({
                           {effEliteM(unit) ? 'ELITE' : 'TROOP'}
                         </span>
                         <span className="munit-name">{unit.customName ?? unit.name}</span>
-                        {!loadout.isValid && <span className="munit-warn-dot" title="Wargear issues">!</span>}
+                        {!loadout.isValid && <span className="munit-warn-dot" title={t('tooltips.wargearIssues')}>!</span>}
                         {/* Psyker validation: warn if unit has PSYKER X (X≥1) but no powers selected */}
                         {factionHasPsychicDisciplines(selectedFaction) &&
                           unit.keywords.some(k => { const m = k.match(/^PSYKER (\d+)$/); return m != null && parseInt(m[1]) >= 1; }) &&
                           (unit.selectedPsychicPowers ?? []).length === 0 && (
-                          <span className="munit-psyker-warn" title="This psyker must have at least one psychic power selected.">⚠</span>
+                          <span className="munit-psyker-warn" title={t('tooltips.psychicRequirement')}>⚠</span>
                         )}
                       </div>
                       <div className="munit-header-right">
@@ -1157,15 +1158,15 @@ export function MobileApp({
                                 placeholder={unit.name}
                                 maxLength={40}
                               />
-                              <button className="mbtn-rename-confirm" title="Confirm" onMouseDown={e => e.preventDefault()} onClick={() => commitRename(unit.id)}>✓</button>
-                              <button className="mbtn-rename-cancel" title="Cancel" onMouseDown={e => e.preventDefault()} onClick={cancelRename}>✕</button>
+                              <button className="mbtn-rename-confirm" title={t('tooltips.confirmName')} onMouseDown={e => e.preventDefault()} onClick={() => commitRename(unit.id)}>✓</button>
+                              <button className="mbtn-rename-cancel" title={t('actions.cancel')} onMouseDown={e => e.preventDefault()} onClick={cancelRename}>✕</button>
                             </div>
                           ) : (
                             <button
                               className="mbtn-rename-trigger"
                               onClick={() => startRename(unit.id, unit.customName ?? '')}
                             >
-                              ✏ {unit.customName ? `"${unit.customName}"` : 'Name this model'}
+                              ✏ {unit.customName ? `"${unit.customName}"` : t('builder.renameModel')}
                             </button>
                           )}
                         </div>
@@ -1202,7 +1203,7 @@ export function MobileApp({
                         {/* Psychic powers */}
                         {(unit.selectedPsychicPowers ?? []).length > 0 && (
                           <div className="munit-psychic-list">
-                            <div className="munit-section-label">🔮 Psychic Powers</div>
+                            <div className="munit-section-label">{t('builder.psychicPowers')}</div>
                             {(unit.selectedPsychicPowers ?? []).map(p => (
                               <div key={p.id} className="munit-psychic-item">
                                 <span className="munit-psychic-name">{p.name}</span>
@@ -1245,7 +1246,7 @@ export function MobileApp({
                             .map(item => (
                               <span key={item.id} className="mwg-tag mwg-tag-default">
                                 🔒 {item.name}
-                                <span className="mwg-cost mwg-included-label">Included</span>
+                                <span className="mwg-cost mwg-included-label">{t('builder.included')}</span>
                               </span>
                             ))}
                             </div>
@@ -1291,15 +1292,15 @@ export function MobileApp({
                             <button className="mstepper-btn" onClick={() => handleChangeUnitCount(idx, unit.count - 1)}>−</button>
                             <span className="mstepper-val">{unit.count}</span>
                             <button className="mstepper-btn" onClick={() => { const max = unitDef?.maxCount ?? 99; if (unit.count < max) handleChangeUnitCount(idx, unit.count + 1); }}>+</button>
-                            <span className="mstepper-label">models</span>
+                            <span className="mstepper-label">{t('builder.modelCount')}</span>
                           </div>
                         </div>
 
                         <div className="munit-actions">
                           <button className="mbtn mbtn-info mbtn-sm" onClick={() => {
                             if (unitDef) { setInfoUnit(buildResolvedUnit(unitDef, unit)); setInfoWargear(unit.selectedWargear); setInfoSelectedUpgrades(unit.selectedUpgrades ?? {}); setInfoPsychicPowers(unit.selectedPsychicPowers ?? []); setInfoGiftsOfChaos(unit.selectedGiftsOfChaos ?? []); setInfoWarbandUnit(unit); }
-                          }}>Info</button>
-                          <button className="mbtn mbtn-gear mbtn-sm" onClick={() => setWargearUnitIdx(idx)}>⚙ Wargear</button>
+                          }}>{t('builder.info')}</button>
+                          <button className="mbtn mbtn-gear mbtn-sm" onClick={() => setWargearUnitIdx(idx)}>{t('builder.wargear')}</button>
                           {(() => {
                             const visibleUpgrades = (unitDef?.upgrades ?? []).filter(upg =>
                               (!upg.requiredSubfactionId || upg.requiredSubfactionId === selectedSubFaction) &&
@@ -1307,36 +1308,38 @@ export function MobileApp({
                             );
                             const hasAutoTiers = unit.selectedWargear.some(sw => sw.isSubfactionRule && sw.description && sw.slot !== 'mark');
                             return (visibleUpgrades.length > 0 || hasAutoTiers) ? (
-                              <button className="mbtn mbtn-upgrade mbtn-sm" onClick={() => setUpgradeUnitIdx(idx)}>⬆ Upgrades</button>
+                              <button className="mbtn mbtn-upgrade mbtn-sm" onClick={() => setUpgradeUnitIdx(idx)}>{t('builder.upgrades')}</button>
                             ) : null;
                           })()}
                           {factionHasPsychicDisciplines(selectedFaction) && unit.keywords.some(k => k.startsWith('PSYKER')) && (
-                            <button className="mbtn mbtn-psychic mbtn-sm" onClick={() => setPsychicUnitIdx(idx)}>🔮 Psychic</button>
+                            <button className="mbtn mbtn-psychic mbtn-sm" onClick={() => setPsychicUnitIdx(idx)}>{t('builder.psychic')}</button>
                           )}
                           {selectedFaction === 'chaos_cult' && (
                             <button
                               className="mbtn mbtn-mutations mbtn-sm"
                               onClick={() => setMutationUnitIdx(idx)}
                               title={(unit.selectedGiftsOfChaos?.length ?? 0) > 0
-                                ? `Mutations: ${unit.selectedGiftsOfChaos!.map(g => g.name).join(', ')}`
-                                : 'Open Gifts of Chaos mutations panel'}
+                                ? t('tooltips.mutationsList', { names: unit.selectedGiftsOfChaos!.map(g => g.name).join(', ') })
+                                : t('tooltips.openMutations')}
                             >
-                              ☠ Mutations{(unit.selectedGiftsOfChaos?.length ?? 0) > 0 ? ` (${unit.selectedGiftsOfChaos!.length})` : ''}
+                              {(unit.selectedGiftsOfChaos?.length ?? 0) > 0
+                              ? t('builder.mutationsWithCount', { count: unit.selectedGiftsOfChaos!.length })
+                              : t('builder.mutations')}
                             </button>
                           )}
                           {unit.unitType === 'troop' && (!unit.keywords.includes('NO PROMOTION') || (unit.selectedUpgrades?.['as_repentia_promoted'] ?? 0) > 0) && !unit.keywords.includes('ELITE') && (
                             <button
                               className={unit.isPromoted ? 'mbtn mbtn-sm mbtn-demote-elite' : 'mbtn mbtn-sm mbtn-promote-elite'}
-                              title={unit.isPromoted ? 'Remove promoted-to-Elite status' : 'Promote this troop to Elite (campaign rule)'}
+                              title={unit.isPromoted ? t('tooltips.demote') : t('tooltips.promote')}
                               onClick={() => handleTogglePromote(idx)}
                             >
-                              {unit.isPromoted ? '↓ Demote' : '↑ Promote'}
+                              {unit.isPromoted ? t('builder.demote') : t('builder.promote')}
                             </button>
                           )}
                           {isEliteEligible(unit) ? (
-                            <button className="mbtn mbtn-sm btn-elite-xp" onClick={() => setEliteProgressionIdx(idx)}>★ XP: {unit.xp ?? 0}</button>
+                            <button className="mbtn mbtn-sm btn-elite-xp" onClick={() => setEliteProgressionIdx(idx)}>{t('builder.xp', { xp: unit.xp ?? 0 })}</button>
                           ) : (
-                            <button className="mbtn mbtn-sm btn-elite-xp btn-injuries" onClick={() => setEliteProgressionIdx(idx)}>☠ Injuries</button>
+                            <button className="mbtn mbtn-sm btn-elite-xp btn-injuries" onClick={() => setEliteProgressionIdx(idx)}>{t('builder.injuries')}</button>
                           )}
                           {(() => {
                             const unitDef4 = allAvailableUnits.find(u => u.id === unit.unitId);
@@ -1345,25 +1348,25 @@ export function MobileApp({
                             return (
                               <button
                                 className="mbtn mbtn-sm"
-                                title={atMax ? `Limit reached (${currentCount}/${unitDef4?.maxCount})` : 'Clone unit with all configuration'}
+                                title={atMax ? t('tooltips.limitReached', { current: currentCount, max: unitDef4?.maxCount ?? 0 }) : t('tooltips.cloneUnitShort')}
                                 disabled={atMax}
                                 onClick={() => handleCloneUnit(idx)}
-                              >⧉ Clone</button>
+                              >{t('actions.clone')}</button>
                             );
                           })()}
                           <button
                             className="mbtn mbtn-sm"
-                            title="Move up"
+                            title={t('actions.moveUp')}
                             disabled={sortedIdx === 0}
                             onClick={() => handleMoveUnit(idx, sortedUnits[sortedIdx - 1].origIdx)}
                           >▲</button>
                           <button
                             className="mbtn mbtn-sm"
-                            title="Move down"
+                            title={t('actions.moveDown')}
                             disabled={sortedIdx === sortedUnits.length - 1}
                             onClick={() => handleMoveUnit(idx, sortedUnits[sortedIdx + 1].origIdx)}
                           >▼</button>
-                          <button className="mbtn mbtn-danger mbtn-sm" onClick={() => handleRemoveUnit(idx)}>✕ Remove</button>
+                          <button className="mbtn mbtn-danger mbtn-sm" onClick={() => handleRemoveUnit(idx)}>✕ {t('actions.remove')}</button>
                         </div>
                       </div>
                     )}
@@ -1378,9 +1381,9 @@ export function MobileApp({
                 className="mbtn mbtn-mercs mbtn-full"
                 onClick={() => setShowMercenaryPanel(true)}
               >
-                ⚔ Hire Mercenaries
+                ⚔ {t('builder.hireMercenaries')}
                 {(warband.mercenaries?.length ?? 0) > 0 && (
-                  <span className="m-merc-count"> ({warband.mercenaries.reduce((t, m) => t + m.count, 0)} hired)</span>
+                  <span className="m-merc-count"> ({t('builder.hiredCount', { count: warband.mercenaries.reduce((total, m) => total + m.count, 0) })})</span>
                 )}
               </button>
               {(warband.mercenaries?.length ?? 0) > 0 && (
@@ -1426,18 +1429,18 @@ export function MobileApp({
                               return u ? <span key={uid} className="m-merc-upgrade-badge"> +{u.label}</span> : null;
                             })}
                           </span>
-                          <span className="m-merc-glory">{totalGlory * merc.count} Glory</span>
+                          <span className="m-merc-glory">{t('builder.costWithCurrency', { value: totalGlory * merc.count, currency: t('builder.glory') })}</span>
                           {/* ⚙ Options button — only for mercs with choices or upgrades */}
                           {(def?.recruitOptions?.length || hasUpgrades) && (
                             <button
                               className={`m-merc-options-btn${isExpanded ? ' active' : ''}`}
-                              title="Options & Upgrades"
+                              title={t('tooltips.mercOptions')}
                               onClick={() => setExpandedMercId(isExpanded ? null : merc.mercenaryId)}
                             >⚙</button>
                           )}
                           <button
                             className="m-merc-info-btn"
-                            title={`View ${merc.name} details`}
+                            title={t('tooltips.viewUnit', { name: merc.name })}
                             onClick={() => { if (effectiveMerc) setInfoMercenary(effectiveMerc); }}
                           >👁</button>
                           <button
@@ -1456,7 +1459,7 @@ export function MobileApp({
                             {/* Recruit choices (mutually exclusive) */}
                             {def?.recruitOptions && def.recruitOptions.length > 0 && (
                               <div className="m-merc-options-group">
-                                <div className="m-merc-options-label">{def.recruitPrompt ?? 'Choose type:'}</div>
+                                <div className="m-merc-options-label">{def.recruitPrompt ?? t('builder.chooseType')}</div>
                                 <div className="m-merc-options-btns">
                                   {def.recruitOptions.map((opt) => (
                                     <button
@@ -1480,7 +1483,7 @@ export function MobileApp({
                             {/* Optional upgrades (toggle) */}
                             {hasUpgrades && (
                               <div className="m-merc-options-group">
-                                <div className="m-merc-options-label">Upgrades:</div>
+                                <div className="m-merc-options-label">{t('builder.upgradesLabel')}</div>
                                 <div className="m-merc-options-btns">
                                   {def!.mercUpgrades!.map((upg) => {
                                     const active = selectedUpgrades.includes(upg.id);
@@ -1507,7 +1510,7 @@ export function MobileApp({
                                         }}
                                       >
                                         {active ? '✓ ' : ''}{upg.label}
-                                        {upg.gloryCostModifier > 0 ? ` (+${upg.gloryCostModifier}⚔)` : upg.gloryCostModifier < 0 ? ` (${upg.gloryCostModifier}⚔)` : ' (free)'}
+                                        {upg.gloryCostModifier > 0 ? ` (+${upg.gloryCostModifier}⚔)` : upg.gloryCostModifier < 0 ? ` (${upg.gloryCostModifier}⚔)` : ` (${t('builder.free')})`}
                                         {upg.condition ? ` — ${upg.condition}` : ''}
                                       </button>
                                     );
@@ -1530,38 +1533,38 @@ export function MobileApp({
 
             {/* Summary stats */}
             <div className="mcard">
-              <div className="mcard-title">Summary</div>
+              <div className="mcard-title">{t('builder.summary')}</div>
               <div className="mstats-grid">
                 <div className="mstat-cell">
-                  <span className="mstat-label">Credits</span>
+                  <span className="mstat-label">{t('builder.credits')}</span>
                   <span className={`mstat-value ${isOverLimit ? 'err' : 'ok'}`}>{totalPoints} / {pointLimit}</span>
                 </div>
                 {gloryLimit > 0 && (
                   <div className="mstat-cell">
-                    <span className="mstat-label">Glory</span>
+                    <span className="mstat-label">{t('builder.glory')}</span>
                     <span className={`mstat-value ${totalGlory > gloryLimit ? 'err' : 'ok'}`}>{totalGlory} / {gloryLimit}</span>
                   </div>
                 )}
                 {gloryLimit === 0 && totalGlory > 0 && (
                   <div className="mstat-cell">
-                    <span className="mstat-label">Glory</span>
+                    <span className="mstat-label">{t('builder.glory')}</span>
                     <span className="mstat-value warn">{totalGlory}</span>
                   </div>
                 )}
                 <div className="mstat-cell">
-                  <span className="mstat-label">Models</span>
+                  <span className="mstat-label">{t('builder.totalModels')}</span>
                   <span className="mstat-value">{totalModels}</span>
                 </div>
                 <div className="mstat-cell">
-                  <span className="mstat-label">Units</span>
+                  <span className="mstat-label">{t('builder.units')}</span>
                   <span className="mstat-value">{warband.units.length}</span>
                 </div>
                 <div className="mstat-cell">
-                  <span className="mstat-label">Elites</span>
+                  <span className="mstat-label">{t('builder.elites')}</span>
                   <span className="mstat-value">{warband.units.filter(u => u.unitType === 'elite' || !!u.isPromoted || u.keywords.includes('ELITE')).length}</span>
                 </div>
                 <div className="mstat-cell">
-                  <span className="mstat-label">Troops</span>
+                  <span className="mstat-label">{t('builder.troops')}</span>
                   <span className="mstat-value">{warband.units.filter(u => u.unitType === 'troop').length}</span>
                 </div>
               </div>
@@ -1569,9 +1572,9 @@ export function MobileApp({
 
             {/* Validation status */}
             <div className={`mcard mcard-status ${validation.isValid && validErrors === 0 ? 'valid' : 'invalid'}`}>
-              <div className="mcard-title">Validation</div>
+              <div className="mcard-title">{t('builder.validation')}</div>
               {validation.isValid && validErrors === 0 ? (
-                <div className="mvalid-ok">✓ Warband is valid!</div>
+                <div className="mvalid-ok">{t('builder.warbandValid')}</div>
               ) : (
                 <>
                   {(validation.errors ?? []).map((e, i) => (
@@ -1605,33 +1608,32 @@ export function MobileApp({
           <div className="mapp-tab">
 
             <div className="mcard">
-              <div className="mcard-title">Save &amp; Load</div>
+              <div className="mcard-title">{tMobile('saveLoad')}</div>
               <button className="mbtn mbtn-save mbtn-full" onClick={handleSaveLocal}>
-                <span className="mbtn-icon">💾</span> Save to Library
+                <span className="mbtn-icon">💾</span> {t('actions.saveToLibrary')}
               </button>
               <button className="mbtn mbtn-load mbtn-full" onClick={() => setShowSavedModal(true)}>
-                <span className="mbtn-icon">📂</span> Load from Library
+                <span className="mbtn-icon">📂</span> {t('actions.loadFromLibrary')}
               </button>
             </div>
 
             <div className="mcard">
-              <div className="mcard-title">Export / Share</div>
+              <div className="mcard-title">{tMobile('exportShare')}</div>
               <p className="mcard-desc">
-                Share your roster with other apps (Google Drive, WhatsApp, email, etc.).
-                The .md file includes all unit data and can be re-imported into the app.
+                {tMobile('exportShareDesc')}
               </p>
               <button className="mbtn mbtn-share mbtn-full" onClick={handleExportMD}>
-                <span className="mbtn-icon">📄</span> Share Roster (.md)
+                <span className="mbtn-icon">📄</span> {t('actions.shareRoster')}
               </button>
             </div>
 
             <div className="mcard">
-              <div className="mcard-title">Import</div>
+              <div className="mcard-title">{tMobile('import')}</div>
               <p className="mcard-desc">
-                Load a warband from a .md roster file or paste the JSON data directly.
+                {tMobile('importDesc')}
               </p>
               <button className="mbtn mbtn-import mbtn-full" onClick={() => setShowImportModal(true)}>
-                <span className="mbtn-icon">⬆</span> Import Warband
+                <span className="mbtn-icon">⬆</span> {t('actions.importWarband')}
               </button>
               <input
                 ref={importInputRef}
@@ -1643,62 +1645,62 @@ export function MobileApp({
             </div>
 
             <div className="mcard">
-              <div className="mcard-title">Terrain Setup</div>
+              <div className="mcard-title">{tMobile('terrain')}</div>
               <p className="mcard-desc">
-                Auto-generate a balanced terrain layout for your battlefield.
+                {tMobile('terrainDesc')}
               </p>
               <button className="mbtn mbtn-terrain mbtn-full" onClick={() => setShowTerrainGen(true)}>
-                <span className="mbtn-icon">🗺</span> Generate Terrain
+                <span className="mbtn-icon">🗺</span> {t('actions.generateTerrain')}
               </button>
             </div>
 
             <div className="mcard">
-              <div className="mcard-title">Tactical Analysis</div>
+              <div className="mcard-title">{tMobile('tactical')}</div>
               <p className="mcard-desc">
-                Analyse your warband — advantages, disadvantages and tactical focus.
+                {tMobile('tacticalDesc')}
               </p>
               <button className="mbtn mbtn-tactical mbtn-full" onClick={() => setShowTactical(true)} disabled={warband.units.length === 0}>
-                <span className="mbtn-icon">⚡</span> Analyse Warband
+                <span className="mbtn-icon">⚡</span> {t('actions.analyseWarband')}
               </button>
             </div>
 
             <div className="mcard">
-              <div className="mcard-title">Battle Mode</div>
+              <div className="mcard-title">{tMobile('battle')}</div>
               <p className="mcard-desc">
-                Full-screen read-only combat reference with all unit stats at a glance.
+                {tMobile('battleDesc')}
               </p>
               <button className="mbtn mbtn-battle mbtn-full" onClick={() => setShowBattleMode(true)} disabled={warband.units.length === 0}>
-                <span className="mbtn-icon">⚔</span> Enter Battle Mode
+                <span className="mbtn-icon">⚔</span> {t('actions.enterBattleMode')}
               </button>
             </div>
 
             <div className="mcard">
-              <div className="mcard-title">Share Link</div>
+              <div className="mcard-title">{tMobile('shareLink')}</div>
               <p className="mcard-desc">
-                Copies a shareable URL to clipboard — anyone can open it to load your warband.
+                {tMobile('shareLinkDesc')}
               </p>
               <button className="mbtn mbtn-share-url mbtn-full" onClick={handleShareUrl}>
-                <span className="mbtn-icon">🔗</span> Copy Share Link
+                <span className="mbtn-icon">🔗</span> {t('actions.copyShareLink')}
               </button>
             </div>
 
             <div className="mcard">
-              <div className="mcard-title">Rules Reference</div>
+              <div className="mcard-title">{tMobile('rules')}</div>
               <p className="mcard-desc">
-                Searchable rules and keyword glossary for quick look-ups during a game.
+                {tMobile('rulesDesc')}
               </p>
               <button className="mbtn mbtn-rules mbtn-full" onClick={() => setShowRulesRef(true)}>
-                <span className="mbtn-icon">📖</span> Open Rules
+                <span className="mbtn-icon">📖</span> {t('actions.openRules')}
               </button>
             </div>
 
             <div className="mcard">
-              <div className="mcard-title">Campaign Manager</div>
+              <div className="mcard-title">{tMobile('campaign')}</div>
               <p className="mcard-desc">
-                Track campaign games, exploration, resources and skills.
+                {tMobile('campaignDesc')}
               </p>
               <button className="mbtn mbtn-campaign mbtn-full" onClick={() => setShowCampaign(true)}>
-                <span className="mbtn-icon">🏰</span> Campaign
+                <span className="mbtn-icon">🏰</span> {t('actions.campaign')}
               </button>
             </div>
 
@@ -1782,7 +1784,7 @@ export function MobileApp({
         <div className="msheet-overlay" onClick={() => setUnitBrowserOpen(false)}>
           <div className="msheet" onClick={e => e.stopPropagation()}>
             <div className="msheet-header">
-              <span className="msheet-title">Add Unit — {currentFaction?.name}</span>
+              <span className="msheet-title">{t('builder.addUnitTitle')} — {currentFaction?.name}</span>
               <button className="msheet-close" onClick={() => setUnitBrowserOpen(false)}>✕</button>
             </div>
             <div className="msheet-body">
@@ -1791,13 +1793,13 @@ export function MobileApp({
                 if (units.length === 0) return null;
                 return (
                   <div key={cat}>
-                    <div className={`msheet-cat-header ${cat}`}>{cat === 'elite' ? 'Elites' : 'Troops'}</div>
+                    <div className={`msheet-cat-header ${cat}`}>{cat === 'elite' ? t('builder.elites') : t('builder.troops')}</div>
                     {units.map(unit => (
                       <div key={unit.id} className="msheet-unit-row">
                         <div className="msheet-unit-info">
                           <span className="msheet-unit-name">{unit.name}</span>
                           <span className="msheet-unit-cost">
-                            {unit.baseCost} {unit.costCurrency === 'glory' ? 'Glory' : 'Cr'}/model
+                            {unit.baseCost} {unit.costCurrency === 'glory' ? t('builder.glory') : 'Cr'}/{t('builder.modelCount')}
                           </span>
                           <span className="msheet-unit-kws">
                             {unit.keywords.slice(0, 4).map((kw, i) => (
@@ -1816,7 +1818,7 @@ export function MobileApp({
                           <button
                             className="mbtn mbtn-primary mbtn-sm"
                             onClick={() => handleAddUnit(unit)}
-                          >Add</button>
+                          >{t('actions.add')}</button>
                         </div>
                       </div>
                     ))}
@@ -1873,16 +1875,16 @@ export function MobileApp({
         <div className="mimport-overlay" onClick={() => setShowNewBuildConfirm(false)}>
           <div className="mimport-dialog" onClick={e => e.stopPropagation()}>
             <div className="mimport-header">
-              <span className="mimport-title">Start New Build?</span>
+              <span className="mimport-title">{t('dialogs.startNewBuild')}</span>
               <button className="msheet-close" onClick={() => setShowNewBuildConfirm(false)}>✕</button>
             </div>
             <p className="mimport-desc">
-              Your warband <strong>&quot;{warband.name}&quot;</strong> has unsaved changes. Save it to the Library first?
+              <Trans i18nKey="dialogs.unsavedChanges" values={{ name: warband.name }} components={{ strong: <strong /> }} />
             </p>
             <div className="mimport-actions">
-              <button className="mbtn mbtn-save mimport-btn" onClick={() => handleConfirmNewBuild(true)}>💾 Save &amp; New</button>
-              <button className="mbtn mbtn-danger mimport-btn" onClick={() => handleConfirmNewBuild(false)}>🗑 Discard</button>
-              <button className="mbtn mbtn-ghost mimport-btn" onClick={() => setShowNewBuildConfirm(false)}>Cancel</button>
+              <button className="mbtn mbtn-save mimport-btn" onClick={() => handleConfirmNewBuild(true)}>{t('actions.saveAndNew')}</button>
+              <button className="mbtn mbtn-danger mimport-btn" onClick={() => handleConfirmNewBuild(false)}>{t('actions.discard')}</button>
+              <button className="mbtn mbtn-ghost mimport-btn" onClick={() => setShowNewBuildConfirm(false)}>{t('actions.cancel')}</button>
             </div>
           </div>
         </div>
@@ -2035,17 +2037,16 @@ export function MobileApp({
         <div className="mimport-overlay" onClick={() => setShowImportModal(false)}>
           <div className="mimport-dialog" onClick={e => e.stopPropagation()}>
             <div className="mimport-header">
-              <span className="mimport-title">Import Warband</span>
+              <span className="mimport-title">{t('dialogs.importWarband')}</span>
               <button className="msheet-close" onClick={() => setShowImportModal(false)}>✕</button>
             </div>
 
             <p className="mimport-desc">
-              Paste the contents of a <code>.thjson</code> or <code>.md</code> roster
-              file below, then tap <strong>Load</strong>.
+              <Trans i18nKey="dialogs.importDescMobile" components={[<code key="0" />, <code key="1" />, <strong key="2" />]} />
             </p>
             <textarea
               className="mimport-textarea"
-              placeholder={'Paste .thjson or .md file contents here…'}
+              placeholder={t('dialogs.importPlaceholder')}
               value={importPasteText}
               onChange={e => setImportPasteText(e.target.value)}
               rows={10}
@@ -2057,19 +2058,19 @@ export function MobileApp({
                 disabled={!importPasteText.trim()}
                 onClick={handleImportFromPaste}
               >
-                ⬆ Load
+                {t('actions.load')}
               </button>
               <button
                 className="mbtn mbtn-ghost mimport-btn"
                 onClick={() => importInputRef.current?.click()}
               >
-                📂 Pick File
+                {t('actions.pickFile')}
               </button>
               <button
                 className="mbtn mbtn-ghost mimport-btn"
                 onClick={() => { setShowImportModal(false); setImportPasteText(''); }}
               >
-                Cancel
+                {t('actions.cancel')}
               </button>
             </div>
           </div>

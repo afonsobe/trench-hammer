@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from './LanguageSwitcher.js';
 import { formatDate } from '../i18n/format.js';
 import { Warband, UnitOption, UnitSubType, SelectedWargear, WargearOption, SelectedPsychicPower, SelectedGiftOfChaos, UnitUpgrade, WarbandMercenary, Mercenary, WarbandUnit, MercenaryStats, SharedWarbandProps } from '../types/index.js';
@@ -808,10 +808,10 @@ export function ArmyBuilder({
 
       <main className="builder-main">
         <aside className="builder-sidebar">
-          <h2>Warband Settings</h2>
+          <h2>{t('builder.warbandSettings')}</h2>
           
           <div className="form-group">
-            <label htmlFor="faction-select">Faction:</label>
+            <label htmlFor="faction-select">{t('builder.factionLabel')}</label>
             <select
               id="faction-select"
               value={selectedFaction}
@@ -827,9 +827,9 @@ export function ArmyBuilder({
               <button
                 className="lore-btn"
                 onClick={() => setShowLore(true)}
-                title="Read faction background lore"
+                title={t('tooltips.readFactionLore')}
               >
-                📖 Read Lore
+                {t('builder.readLore')}
               </button>
             )}
           </div>
@@ -890,7 +890,7 @@ export function ArmyBuilder({
             return (
               <>
                 <div className="form-group">
-                  <label htmlFor="subfaction-select">Warband Variant:</label>
+                  <label htmlFor="subfaction-select">{t('builder.warbandVariantLabel')}</label>
                   <select
                     id="subfaction-select"
                     value={selectedSubFaction}
@@ -906,9 +906,9 @@ export function ArmyBuilder({
                     <button
                       className="lore-btn"
                       onClick={() => setShowWarbandLore(true)}
-                      title="Read warband background lore"
+                      title={t('tooltips.readWarbandLore')}
                     >
-                      📖 Warband Lore
+                      {t('builder.warbandLore')}
                     </button>
                   )}
                 </div>
@@ -954,13 +954,13 @@ export function ArmyBuilder({
           {/* Patron selection */}
           {getPatronsForFaction(selectedFaction, selectedSubFaction).length > 0 && (
             <div className="form-group">
-              <label htmlFor="patron-select">Patron:</label>
+              <label htmlFor="patron-select">{t('builder.patron')}:</label>
               <select
                 id="patron-select"
                 value={warband.patron ?? ''}
                 onChange={e => setWarband(prev => ({ ...prev, patron: e.target.value || undefined }))}
               >
-                <option value="">— None selected —</option>
+                <option value="">{t('builder.noneSelected')}</option>
                 {getPatronsForFaction(selectedFaction, selectedSubFaction).map(p => (
                   <option key={p.id} value={p.id}>{p.name}</option>
                 ))}
@@ -973,7 +973,7 @@ export function ArmyBuilder({
             const visibleAbilities = filterAbilitiesForSubfaction(p.abilities, currentSubFaction?.name);
             return (
               <div className="patron-info-panel">
-                <div className="patron-info-header">⚜ Patron: {p.name}</div>
+                <div className="patron-info-header">{t('builder.patronLabel', { name: p.name })}</div>
                 <p className="patron-info-desc">{p.description}</p>
                 <ul className="patron-info-skills">
                   {visibleAbilities.map((a, i) => (
@@ -987,7 +987,7 @@ export function ArmyBuilder({
           })()}
 
           <div className="form-group">
-            <label htmlFor="point-limit">Credits Limit:</label>
+            <label htmlFor="point-limit">{t('builder.creditsLimitLabel')}</label>
             <input
               id="point-limit"
               type="number"
@@ -999,7 +999,7 @@ export function ArmyBuilder({
           </div>
 
           <div className="form-group">
-            <label htmlFor="glory-limit">Glory Limit:</label>
+            <label htmlFor="glory-limit">{t('builder.gloryLimitLabel')}</label>
             <input
               id="glory-limit"
               type="number"
@@ -1007,13 +1007,13 @@ export function ArmyBuilder({
               max="100"
               value={gloryLimit}
               onChange={handleGloryLimitChange}
-              placeholder="0 = not used"
+              placeholder={t('builder.gloryPlaceholder')}
             />
-            <small className="form-hint">Set to 0 to disable Glory tracking</small>
+            <small className="form-hint">{t('builder.gloryHint')}</small>
           </div>
 
           <div className="form-group">
-            <label htmlFor="warband-name">Warband Name:</label>
+            <label htmlFor="warband-name">{t('builder.warbandNameLabel')}</label>
             <input
               id="warband-name"
               type="text"
@@ -1025,7 +1025,7 @@ export function ArmyBuilder({
           </div>
 
           <div className="summary">
-            <h3>Summary</h3>
+            <h3>{t('builder.summary')}</h3>
             <div className="summary-faction-row">
               <span className="faction-badge">{currentFaction?.name ?? warband.faction}</span>
               {warband.subfactionName && (
@@ -1033,78 +1033,78 @@ export function ArmyBuilder({
               )}
             </div>
             <div className="summary-row">
-              <span>Credits:</span>
+              <span>{t('builder.creditsLabel')}</span>
               <span className={totalPoints > pointLimit ? 'error' : 'success'}>
                 {totalPoints} / {pointLimit}
               </span>
             </div>
             {(gloryLimit > 0 || totalGlory > 0) && (
               <div className="summary-row">
-                <span>Glory:</span>
+                <span>{t('builder.gloryLabel')}</span>
                 {gloryLimit > 0 ? (
                   <span className={totalGlory > gloryLimit ? 'error' : 'success'}>
                     {totalGlory} / {gloryLimit}
                   </span>
                 ) : (
-                  <span className="warning">{totalGlory} (no cap)</span>
+                  <span className="warning">{t('builder.noCap', { value: totalGlory })}</span>
                 )}
               </div>
             )}
             {(warband.mercenaries?.length ?? 0) > 0 && (
               <div className="summary-row">
-                <span>Mercenaries:</span>
-                <span>{warband.mercenaries.reduce((t, m) => t + m.count, 0)} hired</span>
+                <span>{t('builder.mercenariesLabel')}</span>
+                <span>{t('builder.hiredCount', { count: warband.mercenaries.reduce((t, m) => t + m.count, 0) })}</span>
               </div>
             )}
             <div className="summary-row">
-              <span>Total Models:</span>
+              <span>{t('builder.totalModelsLabel')}</span>
               <span>{totalModels}</span>
             </div>
             <div className="summary-row">
-              <span>Units:</span>
+              <span>{t('builder.unitsLabel')}</span>
               <span>{warband.units.length}</span>
             </div>
           </div>
 
           {/* ── Warband Tools ──────────────────────────────────────────── */}
           <div className="army-io">
-            <h3>Warband Tools</h3>
+            <h3>{t('builder.warbandTools')}</h3>
             <div className="army-io-grid">
-              <button className="btn-army-io btn-new" onClick={handleNewBuild} title="Start a fresh warband build">
-                🆕 New
+              <button className="btn-army-io btn-new" onClick={handleNewBuild} title={t('tooltips.newBuild')}>
+                {t('actions.new')}
               </button>
-              <button className="btn-army-io btn-quickbuild" onClick={() => setShowQuickBuild(true)} title="Generate a recommended army list based on your credit and glory budget">
-                🎲 Quick Build
+              <button className="btn-army-io btn-quickbuild" onClick={() => setShowQuickBuild(true)} title={t('tooltips.quickBuild')}>
+                {t('actions.quickBuild')}
               </button>
-              <button className="btn-army-io btn-save" onClick={handleSaveLocal} title="Save current army to your local library">
-                💾 Save
+              <button className="btn-army-io btn-save" onClick={handleSaveLocal} title={t('tooltips.save')}>
+                {t('actions.save')}
               </button>
-              <button className="btn-army-io btn-share" onClick={handleExportMD} title="Share roster as readable Markdown (.md) — includes embedded data for reimport">
-                📄 Share .md
+              <button className="btn-army-io btn-share" onClick={handleExportMD} title={t('tooltips.shareMd')}>
+                {t('actions.shareMd')}
               </button>
-              <button className="btn-army-io btn-import" onClick={() => setShowImportModal(true)} title="Import a .md or .json army file">
-                ⬆ Import
+              <button className="btn-army-io btn-import" onClick={() => setShowImportModal(true)} title={t('tooltips.import')}>
+                {t('actions.import')}
               </button>
-              <button className="btn-army-io btn-load" onClick={() => setShowSavedModal(true)} title="Browse your saved armies">
-                📂 Library
+              <button className="btn-army-io btn-load" onClick={() => setShowSavedModal(true)} title={t('tooltips.library')}>
+                {t('actions.library')}
               </button>
-              <button className="btn-army-io btn-battle" onClick={() => setShowBattleMode(true)} title="Enter Battle Mode — read-only combat reference with all unit stats at a glance" disabled={warband.units.length === 0}>
-                ⚔ Battle Mode
+              <button className="btn-army-io btn-battle" onClick={() => setShowBattleMode(true)} title={t('tooltips.battleMode')} disabled={warband.units.length === 0}>
+                {t('actions.battleMode')}
               </button>
-              <button className="btn-army-io btn-terrain" onClick={() => setShowTerrainGen(true)} title="Generate a balanced terrain layout for your battlefield">
-                🗺 Terrain
+              <button className="btn-army-io btn-terrain" onClick={() => setShowTerrainGen(true)} title={t('tooltips.terrain')}>
+                {t('actions.terrain')}
               </button>
-              <button className="btn-army-io btn-tactical" onClick={() => setShowTactical(true)} title="Analyse your warband — advantages, disadvantages and tactical focus" disabled={warband.units.length === 0}>
-                ⚡ Analyse
+              <button className="btn-army-io btn-tactical" onClick={() => setShowTactical(true)} title={t('tooltips.analyse')} disabled={warband.units.length === 0}>
+                {t('actions.analyse')}
               </button>
-              <button className="btn-army-io btn-share-url" onClick={handleShareUrl} title="Copy a shareable URL with your warband build to clipboard">
-                🔗 Share Link
+              <button className="btn-army-io btn-share-url" onClick={handleShareUrl} title={t('tooltips.shareLink')}>
+                {t('actions.shareLink')}
               </button>
-              <button className="btn-army-io btn-rules" onClick={() => setShowRulesRef(true)} title="Quick-reference for rules and keywords">
-                📖 Rules
+              <button className="btn-army-io btn-rules" onClick={() => setShowRulesRef(true)} title={t('tooltips.rules')}>
+                {t('actions.rules')}
               </button>
-              <button className="btn-army-io btn-campaign" onClick={() => setShowCampaign(true)} title="Campaign Manager — track games, exploration, resources">
-                🏰 Campaign
+              <button className="btn-army-io btn-campaign" onClick={() => setShowCampaign(true)} title={t('tooltips.campaign')}>
+                {t('actions.campaign')}
               </button>
 
             </div>
@@ -1124,9 +1124,9 @@ export function ArmyBuilder({
           </div>
 
           <div className="validation-status">
-            <h3>Validation</h3>
+            <h3>{t('builder.validation')}</h3>
             {validation.isValid ? (
-              <div className="valid">✓ Warband is valid!</div>
+              <div className="valid">{t('builder.warbandValid')}</div>
             ) : (
               <div className="invalid">
                 {validation.errors.map((error, idx) => (
@@ -1188,14 +1188,14 @@ export function ArmyBuilder({
 
         <section className="builder-content">
           <div className="units-panel">
-            <h2>Available Units</h2>
+            <h2>{t('builder.availableUnits')}</h2>
             {(['elite', 'troop'] as const).map(category => {
               const categoryUnits = allAvailableUnits.filter(u => u.unitType === category);
               if (categoryUnits.length === 0) return null;
               return (
                 <div key={category} className="unit-category-section">
                   <h3 className="unit-category-header">
-                    {category === 'elite' ? 'Elites' : 'Troops'}
+                    {category === 'elite' ? t('builder.elites') : t('builder.troops')}
                   </h3>
                   <div className="units-grid">
                     {categoryUnits.map(unit => (
@@ -1204,16 +1204,19 @@ export function ArmyBuilder({
                           <h4>{unit.name}</h4>
                           <button
                             className="btn-unit-info"
-                            title={`View ${unit.name} details`}
+                            title={t('tooltips.viewUnit', { name: unit.name })}
                             onClick={() => { setInfoUnit(unit); setInfoBaseUnit(unit); setInfoWargear(undefined); setInfoWarbandUnit(null); }}
                           >👁</button>
                         </div>
                         <div className="unit-info">
                           <p>
-                            <strong>Cost:</strong> {unit.baseCost}{' '}
-                            {unit.costCurrency === 'glory' ? 'Glory' : 'Credits'}/model
+                            <strong>{t('builder.cost')}</strong>{' '}
+                            {t('builder.costPerModel', {
+                              cost: unit.baseCost,
+                              currency: unit.costCurrency === 'glory' ? t('builder.glory') : t('builder.credits'),
+                            })}
                           </p>
-                          <p><strong>Limit:</strong> {unit.maxCount >= 99 ? 'N/A' : `${unit.minCount}–${unit.maxCount}`}</p>
+                          <p><strong>{t('builder.limit')}</strong> {unit.maxCount >= 99 ? t('builder.notApplicable') : `${unit.minCount}–${unit.maxCount}`}</p>
                           <p className="keywords">
                             <KeywordList keywords={unit.keywords} hide={new Set()} />
                           </p>
@@ -1226,9 +1229,9 @@ export function ArmyBuilder({
                               onClick={() => handleAddUnit(unit)}
                               className="btn-add-unit"
                               disabled={atLimit}
-                              title={atLimit ? `Limit reached (${unit.maxCount})` : undefined}
+                              title={atLimit ? t('tooltips.limitReached', { current: currentCount, max: unit.maxCount }) : undefined}
                             >
-                              {(() => { const cap = unit.maxCount >= 99 ? '∞' : unit.maxCount; return atLimit ? `Limit (${currentCount}/${cap})` : `Add Unit (${currentCount}/${cap})`; })()}
+                              {(() => { const cap = unit.maxCount >= 99 ? '∞' : unit.maxCount; return atLimit ? t('builder.limitReached', { current: currentCount, max: cap }) : t('builder.addUnit', { current: currentCount, max: cap }); })()}
                             </button>
                           );
                         })()}
@@ -1242,17 +1245,19 @@ export function ArmyBuilder({
 
           <div className="selected-units-panel">
             <div className="selected-units-header-row">
-              <h2>Selected Units</h2>
+              <h2>{t('builder.selectedUnits')}</h2>
               <button
                 className="btn-hire-mercenaries"
                 onClick={() => setShowMercenaryPanel(true)}
-                title="Hire mercenaries (paid in Glory)"
+                title={t('tooltips.hireMercenaries')}
               >
-                ⚔ Hire Mercenaries{(warband.mercenaries?.length ?? 0) > 0 ? ` (${warband.mercenaries.reduce((t, m) => t + m.count, 0)} hired)` : ''}
+                {(warband.mercenaries?.length ?? 0) > 0
+                  ? t('builder.hireMercenariesWithCount', { count: warband.mercenaries.reduce((total, m) => total + m.count, 0) })
+                  : t('builder.hireMercenaries')}
               </button>
             </div>
             {warband.units.length === 0 ? (
-              <p className="empty-state">No units selected. Add units from the left.</p>
+              <p className="empty-state">{t('builder.noUnitsSelected')}</p>
             ) : (
               <div className="selected-units-list">
                 {(() => {
@@ -1267,8 +1272,8 @@ export function ArmyBuilder({
                       return ae - be;
                     });
                   const sections: Array<{ label: string; units: typeof sorted }> = [
-                    { label: 'Elites', units: sorted.filter(x => effElite(x.unit)) },
-                    { label: 'Troops', units: sorted.filter(x => !effElite(x.unit)) },
+                    { label: t('builder.elites'), units: sorted.filter(x => effElite(x.unit)) },
+                    { label: t('builder.troops'), units: sorted.filter(x => !effElite(x.unit)) },
                   ];
                   return sections.flatMap(({ label, units: sectionUnits }) => {
                     if (sectionUnits.length === 0) return [];
@@ -1292,8 +1297,8 @@ export function ArmyBuilder({
                             placeholder={unit.name}
                             maxLength={40}
                           />
-                          <button className="btn-rename-confirm" title="Confirm name" onMouseDown={e => e.preventDefault()} onClick={() => commitRename(unit.id)}>✓</button>
-                          <button className="btn-rename-cancel" title="Cancel" onMouseDown={e => e.preventDefault()} onClick={cancelRename}>✕</button>
+                          <button className="btn-rename-confirm" title={t('tooltips.confirmName')} onMouseDown={e => e.preventDefault()} onClick={() => commitRename(unit.id)}>✓</button>
+                          <button className="btn-rename-cancel" title={t('actions.cancel')} onMouseDown={e => e.preventDefault()} onClick={cancelRename}>✕</button>
                         </div>
                       ) : (
                         <div className="unit-name-block">
@@ -1301,60 +1306,61 @@ export function ArmyBuilder({
                           {unit.customName && <span className="unit-typename">{unit.name}</span>}
                           {unit.count > 1 && (
                             <span className="unit-count-badge">
-                              <button className="btn-count-adj" onClick={() => handleSetUnitCount(idx, unit.count - 1)} title="Remove one model">−</button>
+                              <button className="btn-count-adj" onClick={() => handleSetUnitCount(idx, unit.count - 1)} title={t('tooltips.removeOneModel')}>−</button>
                               <span className="unit-count-num">×{unit.count}</span>
-                              <button className="btn-count-adj" onClick={() => handleSetUnitCount(idx, unit.count + 1)} title="Add one model">+</button>
+                              <button className="btn-count-adj" onClick={() => handleSetUnitCount(idx, unit.count + 1)} title={t('tooltips.addOneModel')}>+</button>
                             </span>
                           )}
                           <button
                             className="btn-rename-trigger"
-                            title="Rename this model"
+                            title={t('tooltips.renameModel')}
                             onClick={() => startRename(unit.id, unit.customName ?? '')}
                           >✏</button>
                         </div>
                       )}
                       <span className="unit-cost">
-                        {(unit.costCurrency ?? 'credits') === 'glory'
-                          ? `${unit.totalGloryCost} Glory`
-                          : `${unit.totalCost} Credits`}
+                        {t('builder.costWithCurrency', {
+                          value: (unit.costCurrency ?? 'credits') === 'glory' ? unit.totalGloryCost : unit.totalCost,
+                          currency: (unit.costCurrency ?? 'credits') === 'glory' ? t('builder.glory') : t('builder.credits'),
+                        })}
                       </span>
                       {/* Psyker validation: warn if unit has PSYKER X (X≥1) but no powers selected */}
                       {factionHasPsychicDisciplines(selectedFaction) &&
                         unit.keywords.some(k => { const m = k.match(/^PSYKER (\d+)$/); return m != null && parseInt(m[1]) >= 1; }) &&
                         (unit.selectedPsychicPowers ?? []).length === 0 && (
-                        <span className="psyker-warning-badge" title="This psyker must have at least one psychic power selected.">
-                          ⚠ Needs Power
+                        <span className="psyker-warning-badge" title={t('tooltips.psychicRequirement')}>
+                          {t('builder.needsPower')}
                         </span>
                       )}
                       {unit.unitType === 'troop' && (!unit.keywords.includes('NO PROMOTION') || (unit.selectedUpgrades?.['as_repentia_promoted'] ?? 0) > 0) && !unit.keywords.includes('ELITE') && (
                         <button
                           className={unit.isPromoted ? 'btn-demote-elite' : 'btn-promote-elite'}
-                          title={unit.isPromoted ? 'Remove promoted-to-Elite status' : 'Promote this troop to Elite (campaign rule)'}
+                          title={unit.isPromoted ? t('tooltips.demote') : t('tooltips.promote')}
                           onClick={() => handleTogglePromote(idx)}
                         >
-                          {unit.isPromoted ? '↓ Demote' : '↑ Promote'}
+                          {unit.isPromoted ? t('builder.demote') : t('builder.promote')}
                         </button>
                       )}
                       {isEliteEligible(unit) ? (
                         <button
                           className="btn-elite-xp"
-                          title={`Campaign progression for ${unit.name} (XP: ${unit.xp ?? 0})`}
+                          title={t('tooltips.xpProgress', { name: unit.name, xp: unit.xp ?? 0 })}
                           onClick={() => setEliteProgressionIdx(idx)}
                         >
-                          ★ XP: {unit.xp ?? 0}
+                          {t('builder.xp', { xp: unit.xp ?? 0 })}
                         </button>
                       ) : (
                         <button
                           className="btn-elite-xp btn-injuries"
-                          title={`Battle Scars & Traumas for ${unit.name}`}
+                          title={t('tooltips.injuries', { name: unit.name })}
                           onClick={() => setEliteProgressionIdx(idx)}
                         >
-                          ☠ Injuries
+                          {t('builder.injuries')}
                         </button>
                       )}
                       <button
                         className="btn-unit-info"
-                        title={`View ${unit.name} details`}
+                        title={t('tooltips.viewUnit', { name: unit.name })}
                         onClick={() => {
                           const unitDef = allAvailableUnits.find(u => u.id === unit.unitId);
                           if (unitDef) { setInfoUnit(buildResolvedUnit(unitDef, unit)); setInfoBaseUnit(unitDef); setInfoWargear(unit.selectedWargear); setInfoSelectedUpgrades(unit.selectedUpgrades ?? {}); setInfoPsychicPowers(unit.selectedPsychicPowers ?? []); setInfoGiftsOfChaos(unit.selectedGiftsOfChaos ?? []); setInfoWarbandUnit(unit); }
@@ -1394,9 +1400,9 @@ export function ArmyBuilder({
                       <button
                         className="btn-wargear"
                         onClick={() => setWargearUnitIdx(idx)}
-                        title="Open wargear upgrade panel"
+                        title={t('tooltips.openWargear')}
                       >
-                        ⚙ Wargear
+                        {t('builder.wargear')}
                       </button>
                       {(() => {
                         const unitDef2 = allAvailableUnits.find(u => u.id === unit.unitId);
@@ -1409,9 +1415,9 @@ export function ArmyBuilder({
                           <button
                             className="btn-upgrade"
                             onClick={() => setUpgradeUnitIdx(idx)}
-                            title="Open unit upgrades panel"
+                            title={t('tooltips.openUpgrades')}
                           >
-                            ⬆ Upgrades
+                            {t('builder.upgrades')}
                           </button>
                         ) : null;
                       })()}
@@ -1419,9 +1425,9 @@ export function ArmyBuilder({
                         <button
                           className="btn-psychic"
                           onClick={() => setPsychicUnitIdx(idx)}
-                          title="Open psychic powers panel"
+                          title={t('tooltips.openPsychic')}
                         >
-                          🔮 Psychic
+                          {t('builder.psychic')}
                         </button>
                       )}
                       {selectedFaction === 'chaos_cult' && (
@@ -1429,10 +1435,12 @@ export function ArmyBuilder({
                           className="btn-mutations"
                           onClick={() => setMutationUnitIdx(idx)}
                           title={(unit.selectedGiftsOfChaos?.length ?? 0) > 0
-                            ? `Mutations: ${unit.selectedGiftsOfChaos!.map(g => g.name).join(', ')}`
-                            : 'Open Gifts of Chaos mutations panel'}
+                            ? t('tooltips.mutationsList', { names: unit.selectedGiftsOfChaos!.map(g => g.name).join(', ') })
+                            : t('tooltips.openMutations')}
                         >
-                          ☠ Mutations{(unit.selectedGiftsOfChaos?.length ?? 0) > 0 ? ` (${unit.selectedGiftsOfChaos!.length})` : ''}
+                          {(unit.selectedGiftsOfChaos?.length ?? 0) > 0
+                            ? t('builder.mutationsWithCount', { count: unit.selectedGiftsOfChaos!.length })
+                            : t('builder.mutations')}
                         </button>
                       )}
                       {(() => {
@@ -1443,29 +1451,29 @@ export function ArmyBuilder({
                           <div className="unit-actions-right">
                             <button
                               className="btn-move"
-                              title="Move up"
+                              title={t('actions.moveUp')}
                               disabled={idx === 0}
                               onClick={() => handleMoveUnit(idx, 'up')}
                             >▲</button>
                             <button
                               className="btn-move"
-                              title="Move down"
+                              title={t('actions.moveDown')}
                               disabled={idx === warband.units.length - 1}
                               onClick={() => handleMoveUnit(idx, 'down')}
                             >▼</button>
                             <button
                               className="btn-clone"
-                              title={atMax ? `Limit reached (${currentCount}/${unitDef3?.maxCount})` : 'Clone this unit with all its configuration'}
+                              title={atMax ? t('tooltips.limitReached', { current: currentCount, max: unitDef3?.maxCount ?? 0 }) : t('tooltips.cloneUnit')}
                               disabled={atMax}
                               onClick={() => handleCloneUnit(idx)}
                             >
-                              ⧉ Clone
+                              {t('actions.clone')}
                             </button>
                             <button
                               onClick={() => handleRemoveUnit(idx)}
                               className="btn-remove"
                             >
-                              Remove
+                              {t('actions.remove')}
                             </button>
                           </div>
                         );
@@ -1585,13 +1593,19 @@ export function ArmyBuilder({
                           {selItems.filter(w => !w.isSubfactionRule).map(w => (
                             <span key={w.id} className="wargear-tag">
                               {w.name}{w.quantity > 1 ? ` ×${w.quantity}` : ''}{' '}
-                              ({w.cost * w.quantity}{w.costCurrency === 'glory' ? ' Glory' : ' Credits'})
+                              ({t('builder.costWithCurrency', {
+                                value: w.cost * w.quantity,
+                                currency: w.costCurrency === 'glory' ? t('builder.glory') : t('builder.credits'),
+                              })})
                             </span>
                           ))}
                           {psychicItems.map(p => (
                             <span key={p.id} className="psychic-tag">
                               🔮 {p.name}{' '}
-                              ({p.cost}{p.costCurrency === 'glory' ? ' Glory' : ' Credits'})
+                              ({t('builder.costWithCurrency', {
+                                value: p.cost,
+                                currency: p.costCurrency === 'glory' ? t('builder.glory') : t('builder.credits'),
+                              })})
                             </span>
                           ))}
                           {(() => {
@@ -1625,7 +1639,7 @@ export function ArmyBuilder({
             {/* ── Hired Mercenaries ── */}
             {(warband.mercenaries?.length ?? 0) > 0 && (
               <div className="hired-mercenaries-section">
-                <h3 className="hired-mercs-title">⚔ Hired Mercenaries</h3>
+                <h3 className="hired-mercs-title">{t('builder.hiredMercenaries')}</h3>
                 <div className="selected-units-list">
                   {warband.mercenaries.map((merc) => {
                     const def = ALL_MERCENARIES.find((m) => m.id === merc.mercenaryId);
@@ -1661,17 +1675,17 @@ export function ArmyBuilder({
                               return u ? <span key={uid} className="merc-upgrade-badge"> +{u.label}</span> : null;
                             })}
                           </h4>
-                          <span className="unit-cost merc-glory-tag">{totalGlory * merc.count} Glory</span>
+                          <span className="unit-cost merc-glory-tag">{t('builder.costWithCurrency', { value: totalGlory * merc.count, currency: t('builder.glory') })}</span>
                           {(def?.recruitOptions?.length || hasUpgrades) && (
                             <button
                               className={`btn-merc-options${isExpanded ? ' active' : ''}`}
-                              title="Options &amp; Upgrades"
+                              title={t('tooltips.mercOptions')}
                               onClick={() => setExpandedMercId(isExpanded ? null : merc.mercenaryId)}
                             >⚙</button>
                           )}
                           <button
                             className="btn-merc-info"
-                            title={`View ${merc.name} details`}
+                            title={t('tooltips.viewUnit', { name: merc.name })}
                             onClick={() => { if (effectiveMerc) setInfoMercenary(effectiveMerc); }}
                           >&#128065;</button>
                           <button
@@ -1682,7 +1696,7 @@ export function ArmyBuilder({
                               )
                             }
                           >
-                            Remove
+                            {t('actions.remove')}
                           </button>
                         </div>
 
@@ -1691,7 +1705,7 @@ export function ArmyBuilder({
                           <div className="merc-options-panel">
                             {def?.recruitOptions && def.recruitOptions.length > 0 && (
                               <div className="merc-options-group">
-                                <div className="merc-options-label">{def.recruitPrompt ?? 'Choose type:'}</div>
+                                <div className="merc-options-label">{def.recruitPrompt ?? t('builder.chooseType')}</div>
                                 <div className="merc-options-btns">
                                   {def.recruitOptions.map((opt) => (
                                     <button
@@ -1714,7 +1728,7 @@ export function ArmyBuilder({
                             )}
                             {hasUpgrades && (
                               <div className="merc-options-group">
-                                <div className="merc-options-label">Upgrades:</div>
+                                <div className="merc-options-label">{t('builder.upgradesLabel')}</div>
                                 <div className="merc-options-btns">
                                   {def!.mercUpgrades!.map((upg) => {
                                     const active = selectedUpgrades.includes(upg.id);
@@ -1741,7 +1755,7 @@ export function ArmyBuilder({
                                         }}
                                       >
                                         {active ? '✓ ' : ''}{upg.label}
-                                        {upg.gloryCostModifier > 0 ? ` (+${upg.gloryCostModifier}⚔)` : upg.gloryCostModifier < 0 ? ` (${upg.gloryCostModifier}⚔)` : ' (free)'}
+                                        {upg.gloryCostModifier > 0 ? ` (+${upg.gloryCostModifier}⚔)` : upg.gloryCostModifier < 0 ? ` (${upg.gloryCostModifier}⚔)` : ` (${t('builder.free')})`}
                                         {upg.condition ? ` — ${upg.condition}` : ''}
                                       </button>
                                     );
@@ -1774,16 +1788,16 @@ export function ArmyBuilder({
         <div className="mimport-overlay" onClick={() => setShowNewBuildConfirm(false)}>
           <div className="mimport-dialog" onClick={e => e.stopPropagation()}>
             <div className="mimport-header">
-              <span className="mimport-title">Start New Build?</span>
+              <span className="mimport-title">{t('dialogs.startNewBuild')}</span>
               <button className="msheet-close" onClick={() => setShowNewBuildConfirm(false)}>✕</button>
             </div>
             <p className="mimport-desc">
-              Your warband <strong>&quot;{warband.name}&quot;</strong> has unsaved changes. Save it to the Library first?
+              <Trans i18nKey="dialogs.unsavedChanges" values={{ name: warband.name }} components={{ strong: <strong /> }} />
             </p>
             <div className="mimport-actions">
-              <button className="mbtn mbtn-save mimport-btn" onClick={() => handleConfirmNewBuild(true)}>💾 Save &amp; New</button>
-              <button className="mbtn mbtn-danger mimport-btn" onClick={() => handleConfirmNewBuild(false)}>🗑 Discard</button>
-              <button className="mbtn mbtn-ghost mimport-btn" onClick={() => setShowNewBuildConfirm(false)}>Cancel</button>
+              <button className="mbtn mbtn-save mimport-btn" onClick={() => handleConfirmNewBuild(true)}>{t('actions.saveAndNew')}</button>
+              <button className="mbtn mbtn-danger mimport-btn" onClick={() => handleConfirmNewBuild(false)}>{t('actions.discard')}</button>
+              <button className="mbtn mbtn-ghost mimport-btn" onClick={() => setShowNewBuildConfirm(false)}>{t('actions.cancel')}</button>
             </div>
           </div>
         </div>
@@ -1794,15 +1808,15 @@ export function ArmyBuilder({
         <div className="mimport-overlay" onClick={() => setShowImportModal(false)}>
           <div className="mimport-dialog" onClick={e => e.stopPropagation()}>
             <div className="mimport-header">
-              <span className="mimport-title">Import Warband</span>
+              <span className="mimport-title">{t('dialogs.importWarband')}</span>
               <button className="msheet-close" onClick={() => setShowImportModal(false)}>✕</button>
             </div>
             <p className="mimport-desc">
-              Paste the contents of a <code>.thjson</code> or <code>.md</code> roster file below, then click <strong>Load</strong>.
+              <Trans i18nKey="dialogs.importDesc" components={[<code key="0" />, <code key="1" />, <strong key="2" />]} />
             </p>
             <textarea
               className="mimport-textarea"
-              placeholder="Paste .thjson or .md file contents here…"
+              placeholder={t('dialogs.importPlaceholder')}
               value={importPasteText}
               onChange={e => setImportPasteText(e.target.value)}
               rows={10}
@@ -1812,15 +1826,15 @@ export function ArmyBuilder({
                 className="mbtn mbtn-primary mimport-btn"
                 disabled={!importPasteText.trim()}
                 onClick={handleImportFromPaste}
-              >⬆ Load</button>
+              >{t('actions.load')}</button>
               <button
                 className="mbtn mbtn-ghost mimport-btn"
                 onClick={() => importInputRef.current?.click()}
-              >📂 Pick File</button>
+              >{t('actions.pickFile')}</button>
               <button
                 className="mbtn mbtn-ghost mimport-btn"
                 onClick={() => { setShowImportModal(false); setImportPasteText(''); }}
-              >Cancel</button>
+              >{t('actions.cancel')}</button>
             </div>
           </div>
         </div>

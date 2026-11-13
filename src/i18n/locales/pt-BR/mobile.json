@@ -1,0 +1,19 @@
+{
+  "saveLoad": "Salvar e Carregar",
+  "exportShare": "Exportar / Compartilhar",
+  "exportShareDesc": "Compartilhe sua lista com outros aplicativos (Google Drive, WhatsApp, e-mail etc.). O arquivo .md inclui todos os dados das unidades e pode ser reimportado no app.",
+  "import": "Importar",
+  "importDesc": "Carregue uma warband a partir de um arquivo de lista .md ou cole os dados JSON diretamente.",
+  "terrain": "Configuração de Terreno",
+  "terrainDesc": "Gere automaticamente um layout de terreno equilibrado para o seu campo de batalha.",
+  "tactical": "Análise Tática",
+  "tacticalDesc": "Analise sua warband — vantagens, desvantagens e foco tático.",
+  "battle": "Modo Batalha",
+  "battleDesc": "Referência de combate em tela cheia, somente leitura, com todas as estatísticas das unidades.",
+  "shareLink": "Link de Compartilhamento",
+  "shareLinkDesc": "Copia um link compartilhável para a área de transferência — qualquer pessoa pode abri-lo para carregar sua warband.",
+  "rules": "Referência de Regras",
+  "rulesDesc": "Regras pesquisáveis e glossário de palavras-chave para consultas rápidas durante o jogo.",
+  "campaign": "Gerenciador de Campanha",
+  "campaignDesc": "Acompanhe partidas de campanha, exploração, recursos e habilidades."
+}

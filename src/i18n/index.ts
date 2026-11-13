@@ -50,7 +50,7 @@ void i18n.use(initReactI18next).init({
   fallbackLng: 'en',
   supportedLngs: SUPPORTED_LANGUAGES.map((lang) => lang.code),
   defaultNS: 'common',
-  ns: ['common'],
+  ns: ['common', 'mobile'],
   interpolation: { escapeValue: false },
   returnNull: false,
   // Resources are bundled, so initialisation can be synchronous.

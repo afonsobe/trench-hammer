@@ -4,6 +4,17 @@ All notable changes to the Trench Hammer Army Builder application are documented
 
 ---
 
+## [2.0.2] - 2026-11-13
+
+### Added
+- **Phase 1 i18n**: translated the main UI chrome of `ArmyBuilder.tsx` and `MobileApp.tsx` (sidebar settings, summary, warband tools, validation, available/selected units, unit card actions, hired mercenaries, dialogs) in both `en` and `pt-BR`, reusing shared keys across desktop and mobile.
+- Added a `mobile` namespace for the mobile-only Tools cards.
+
+### Changed
+- `npm run i18n:check` now covers 2 namespaces (`common`, `mobile`).
+
+---
+
 ## [2.0.1] - 2026-11-13
 
 ### Added

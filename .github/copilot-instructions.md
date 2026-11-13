@@ -14,7 +14,7 @@ combining Trench Crusade core mechanics with Warhammer 40K lore/factions. Built 
 - **⚠ DEPLOY RULE**: changes only reach the live site after `git commit` + `git push origin master`. There is no manual deploy step; the legacy `gh-pages` branch is unused (do not run `gh-pages`).
 
 ### Current Version
-- **App version**: Trench Hammer **2.0.1** / date: **November 13, 2026** (source of truth: `version` in `package.json`, injected as `__APP_VERSION__`)
+- **App version**: Trench Hammer **2.0.2** / date: **November 13, 2026** (source of truth: `version` in `package.json`, injected as `__APP_VERSION__`)
 - **Versioning rule**: bump the patch by `0.0.1` for each release (2.0.2, 2.0.3, ...)
 - **Service worker cache**: `trench-hammer-v53` (in `public/sw.js`)
 - **Version string locations**: `src/components/ArmyBuilder.tsx` and `src/components/mobile/MobileApp.tsx` (both render `__APP_VERSION__`)
